@@ -102,6 +102,8 @@ button:active {
 .price-table .col-c,
 .price-table .col-d,
 .price-table .col-e { text-align: right; }
+.price-table .col-f { text-align: right; }
+
 
 .price-table input.menge-input {
     background-color: #fff8dc;

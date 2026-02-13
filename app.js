@@ -789,8 +789,9 @@ if (angebotTyp === "anfrage") {
                     <div class="col-a">${colA}</div>
                     <div class="col-b">${colB}</div>
                     <div class="col-c">${colC}</div>
-                    <div class="col-d">${preis.toLocaleString("de-DE",{minimumFractionDigits:2})} €</div>
-                    <div class="col-e">${(menge * preis).toLocaleString("de-DE",{minimumFractionDigits:2})} €</div>
+                    <div class="col-d">${menge.toLocaleString("de-DE", { minimumFractionDigits: 0 })}</div>
+                    <div class="col-e">${preis.toLocaleString("de-DE",{minimumFractionDigits:2})} €</div>
+                    <div class="col-f">${(menge * preis).toLocaleString("de-DE",{minimumFractionDigits:2})} €</div>
                 `;
 
                 container.appendChild(zeile);
