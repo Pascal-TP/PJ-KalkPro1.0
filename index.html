@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Kunden – Preis – Kalkulator</title>
+<link rel="stylesheet" href="style.css">
+<link rel="icon" href="favicon.ico">
+</head>
+<body>
+
+<img src="logo.png" class="logo">
+
+<!-- Countdown -->
+<div id="timer">Logout in: 10:00</div>
+
+<!-- NEU: Angemeldet als -->
+<div id="login-info"></div>
+
+<!-- SEITE 1: LOGIN -->
+<div class="page active" id="page-login">
+    <h2>Login</h2>
+
+    <input id="loginUser" type="email" placeholder="E-Mail">
+    <input id="loginPass" type="password" placeholder="Passwort">
+
+    <div class="error" id="loginError"></div>
+
+    <button onclick="login()">Anmelden / Weiter</button>
+
+    <button onclick="forgotPassword()">Passwort vergessen</button>
+    <button onclick="goToChange()">Passwort ändern</button>
+    <button onclick="logout()">Abmelden</button>
+</div>
+
+<!-- SEITE 2: PASSWORT ÄNDERN -->
+<div class="page" id="page-change">
+    <h2>Passwort ändern</h2>
+
+    <input id="oldPass" type="password" placeholder="Altes Passwort">
+    <input id="newPass1" type="password" placeholder="Neues Passwort">
+    <input id="newPass2" type="password" placeholder="Neues Passwort wiederholen">
+
+    <div class="error" id="changeError"></div>
+
+    <button onclick="savePassword()">Speichern</button>
+    <button onclick="showPage('page-login')">Abbrechen</button>
+</div>
+
+<!-- SEITE 3: AUSWAHL -->
+<div class="page" id="page-3">
+    <h2>Bitte auswählen</h2>
+
+    <button onclick="showPage('page-4')">KV</button>
+    <button onclick="showPage('page-5')">Anfrage an NDF</button>
+  
+    <p class="hint">
+        KV = Kostenvoranschlag – die schnelle und direkte Ermittlung eines Richtpreises für den Kunden<br><br>
+        Anfrage an NDF – Ermittlung eines Richtpreises für den Kunden, jedoch mit der Möglichkeit ein qualifiziertes Angebot von NDF per Mail anzufragen.<br>
+    </p>
+    <button onclick="clearInputs()">Eingaben löschen</button>
+    <button onclick="showPage('page-login')">Zurück</button>
+    <button id="btnExportLog" class="hidden" onclick="exportLoginLog()">
+      Login-Log herunterladen
+    </button>
+
+</div>
+
+<!-- SEITE 4: HAUPTMENÜ KV -->
+<div class="page" id="page-4">
+    <h2>Hauptmenü KV</h2>
+
+    <button onclick="showPage('page-6')">Sanierung</button>
+    <button onclick="showPage('page-7')">Neubau</button>
+    <button onclick="showPage('page-3')">Zurück</button>
+</div>
+
+<!-- SEITE 5: ANFRAGE AN NDF -->
+<div class="page" id="page-5">
+    <h2>Anfrage an NDF</h2>
+
+    <div class="input-field">
+        <input id="pj-contact" placeholder="Ansprechpartner bei PJ">
+    </div>
+    <div class="input-field">
+        <input id="pj-number" placeholder="SHK – PJ-Kunden-Nr.">
+    </div>
+    <div class="input-field">
+        <input id="shk-name" placeholder="SHK Name/Firma">
+    </div>
+    <div class="input-field">
+        <input id="shk-contact" placeholder="SHK Ansprechpartner">
+    </div>
+    <div class="input-field">
+        <input id="shk-email" type="email" placeholder="SHK E-Mail">
+    </div>
+    <div class="input-field">
+        <input id="shk-phone" placeholder="SHK Telefon-Nr.">
+    </div>
+    <div class="input-field">
+        <input id="site-address" placeholder="Adresse Baustelle">
+    </div>
+    <div class="input-field">
+        <input id="execution-date" type="date" placeholder="Gewünschter Ausführungstermin">
+    </div>
+
+    <div class="error" id="page5-error" style="color:darkred; margin:10px;"></div>
+
+    <div class="button-bar">
+        <button onclick="submitPage5()">Weiter</button>
+        <button onclick="showPage('page-3')">Zurück</button>
+    </div>
+</div>
+<!-- SEITE 6: HAUPTMENÜ SANIERUNG -->
+<div class="page" id="page-6">
+    <h2>Hauptmenü Sanierung</h2>
+
+    <!-- Auswahlbuttons untereinander -->
+    <div>
+        <button onclick="showPage('page-8')">Fräsen</button><br>
+        <button onclick="showPage('page-9')">Estrich</button><br>
+        <button onclick="showPage('page-10')">Klett 3mm</button><br>
+        <button onclick="showPage('page-11')">Trockenbau</button>
+    </div>
+
+    <!-- Navigationsbuttons nebeneinander -->
+    <div style="margin-top:40px;">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+    </div>
+</div>
+<!-- SEITE 7: HAUPTMENÜ NEUBAU -->
+<div class="page" id="page-7">
+    <h2>Hauptmenü Neubau</h2>
+
+    <!-- Auswahlbuttons untereinander -->
+    <div>
+        <button onclick="showPage('page-9')">Estrich</button><br>
+        <button onclick="showPage('page-13')">unbeheizte Fläche</button><br>
+        <button onclick="showPage('page-14-1')">Tackersystem</button><br>
+        <button onclick="showPage('page-26')">Klettsystem</button><br>
+        <button onclick="showPage('page-29')">Noppensystem</button><br>
+        <button onclick="showPage('page-33')">Industrieboden</button>
+	<button onclick="showPage('page-18')">Unterdämmung</button>
+    </div>
+
+    <!-- Navigationsbuttons nebeneinander -->
+    <div style="margin-top:40px;">
+        <button onclick="showPage('page-4')">Zurück</button>
+        
+    </div>
+</div>
+
+<!-- SEITE 14: TACKERSYSTEM -->
+<div class="page" id="page-14">
+    <h2>Tackersystem</h2>
+
+    <div id="page14-content" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 14.1: AUSWAHL MARKE -->
+<div class="page" id="page-14-1">
+    <h2>Auswahl Marke</h2>
+
+    <button onclick="showPage('page-14')">Handelsmarke</button>
+    <button onclick="showPage('page-14-2')">Uponor</button>
+    <button onclick="showPage('page-14-3')">Roth</button>
+
+    <br><br>
+
+    <button onclick="showPage('page-7')">Zurück</button>
+</div>
+
+<!-- SEITE 14.3: ROTH -->
+<div class="page" id="page-14-3">
+
+       <div id="content-14-3" class="price-table"></div>
+
+<div class="button-bar">
+                <button onclick="showPage('page-4')">Zurück</button>
+                <button onclick="showPage('page-18')">Weiter</button>
+                <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+               </div>
+</div>
+
+<!-- SEITE 40: KOSTENVORANSCHLAG / ANFRAGE -->
+<div class="page" id="page-40">
+    <h2 id="page40-title">Kostenvoranschlag</h2>
+
+    <!-- Anfrage-Daten (nur bei Anfrage sichtbar) -->
+    <div id="anfrage-daten" style="display:none; margin:20px auto; max-width:1100px; text-align:left;">
+    <div class="subtitle">Anfrage-Daten</div>
+    <div id="anfrage-daten-content"></div>
+    <hr style="margin:20px 0;">
+    </div>
+
+    <!-- Zusammenfassung der Mengen -->
+    <div id="summary-content"></div>
+
+    <!-- Gesamtsumme / Angebotspreis -->
+    <div id="angebotspreis" class="gesamt">Gesamtpreis: 0,00 €</div>
+    <div id="angebotspreisRabatt" class="gesamt rabatt">
+  Gesamtpreis abzgl. SHK-Rabatt (15%): 0,00 €
+</div>
+
+    <div style="text-align:center; margin-bottom:20px;">(netto, freibleibend)</div>
+
+    <!-- Allgemeine Hinweise aus CSV -->
+    <div id="hinweise-content"></div>
+
+    <!-- Buttons -->
+    <div class="button-bar">
+        <button onclick="showPage('page-3')">Zurück</button>
+        <button onclick="printPage40()">Drucken / speichern als PDF</button>
+        <button onclick="sendMailPage40()">Senden als Mail</button>
+        <button onclick="clearInputs()">Eingaben löschen</button>
+    </div>
+</div>
+
+<!-- SEITE 41: Hinweis fehlende Anfrage-Daten -->
+<div class="page" id="page-41">
+    <h2>Hinweis</h2>
+
+    <p>
+        Für eine Anfrage an NDF müssen zuerst die Kontaktdaten vollständig ausgefüllt werden.
+    </p>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-5')">Zur Anfrage</button>
+        <button onclick="showPage('page-40')">KV anzeigen</button>
+    </div>
+</div>
+
+<!-- SEITE 14.2: UPONOR -->
+<div class="page" id="page-14-2">
+
+    <div id="content-14-2" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+
+</div>
+
+<!-- SEITE 8: Frässystem -->
+<div class="page" id="page-8">
+    <h2>Fräsen</h2>
+
+    <div id="content-8" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-6')">Zurück</button>
+        <button onclick="showPage('page-20')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 18: Unterdämmung -->
+<div class="page" id="page-18">
+    <h2>Unterdämmung</h2>
+
+    <div id="content-18" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-20')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 20: Verteiler & Regeltechnik -->
+<div class="page" id="page-20">
+    <h2>Verteiler & Regeltechnik</h2>
+
+    <div id="content-20" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-18')">Zurück</button>
+        <button onclick="showPage('page-21')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 21: Dienstleistungen -->
+<div class="page" id="page-21">
+    <h2>Dienstleistungen</h2>
+
+    <div id="content-21" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-20')">Zurück</button>
+        <button onclick="showPage('page-22')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 22: Zuschläge -->
+<div class="page" id="page-22">
+    <h2>Zuschläge</h2>
+
+    <div id="content-22" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-21')">Zurück</button>
+        <button onclick="direktZumAngebot()">Weiter</button>
+    </div>
+</div>
+
+<!-- SEITE 9: Estrich -->
+<div class="page" id="page-9">
+    <h2>Estrich</h2>
+
+    <div id="content-9" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+<!-- SEITE 10: Klett3mm -->
+<div class="page" id="page-10">
+    <h2>Klett 3mm</h2>
+
+    <div id="content-10" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 11: MENÜ TROCKENBAU -->
+<div class="page" id="page-11">
+    <h2>Menü Trockenbau</h2>
+
+    <!-- Auswahlbuttons untereinander -->
+    <div>
+        <button onclick="showPage('page-23')">Aufbau 50mm</button><br>
+        <button onclick="showPage('page-24')">Aufbau 20/30mm + 3mm Deckschicht</button><br>
+        <button onclick="showPage('page-25')">Aufbau 25mm (XPS)</button><br>
+    </div>
+
+    <!-- Navigationsbuttons nebeneinander -->
+    <div style="margin-top:40px;">
+        <button onclick="showPage('page-6')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+    </div>
+</div>
+
+<!-- SEITE 23: Aufbau 50mm -->
+<div class="page" id="page-23">
+    <h2>Aufbau 50mm</h2>
+
+    <div id="content-23" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 24: Aufbau 20/30mm + 3mm Deckschicht -->
+<div class="page" id="page-24">
+    <h2>Aufbau 20/30mm + 3mm Deckschicht</h2>
+
+    <div id="content-24" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 25: Aufbau 25mm (XPS) -->
+<div class="page" id="page-25">
+    <h2>Aufbau 25mm (XPS)</h2>
+
+    <div id="content-25" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-20')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 26: AUSWAHL MARKE Klett -->
+<div class="page" id="page-26">
+    <h2>Auswahl Marke Klettsystem</h2>
+
+    <button onclick="showPage('page-27')">Handelsmarke</button>
+    <button onclick="showPage('page-28')">Uponor</button>
+    <br><br>
+
+    <button onclick="showPage('page-7')">Zurück</button>
+</div>
+
+<!-- SEITE 29: AUSWAHL MARKE Noppensystem -->
+<div class="page" id="page-29">
+    <h2>Auswahl Marke Noppensystem</h2>
+
+    <button onclick="showPage('page-30')">Handelsmarke</button>
+    <button onclick="showPage('page-31')">Uponor</button>
+    <button onclick="showPage('page-32')">Roth</button>
+    <br><br>
+
+    <button onclick="showPage('page-7')">Zurück</button>
+</div>
+
+<!-- SEITE 27: Klett Handelsmarke -->
+<div class="page" id="page-27">
+    <h2>Klettsystem Handelsmarke</h2>
+
+    <div id="content-27" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-26')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 28: Klett Uponor -->
+<div class="page" id="page-28">
+    <h2>Klettsystem Uponor</h2>
+
+    <div id="content-28" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-26')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 30: Noppen Handelsmarke -->
+<div class="page" id="page-30">
+    <h2>Noppensystem Handelsmarke</h2>
+
+    <div id="content-30" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 31: Noppen Uponor -->
+<div class="page" id="page-31">
+    <h2>Noppensystem Uponor</h2>
+
+    <div id="content-31" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 32: Noppen Roth -->
+<div class="page" id="page-32">
+    <h2>Noppensystem Roth</h2>
+
+    <div id="content-32" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 33: Industrieboden -->
+<div class="page" id="page-33">
+    <h2>Industrieboden</h2>
+
+    <div id="content-33" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-20')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<!-- SEITE 13: unbeheizte Fläche -->
+<div class="page" id="page-13">
+    <h2>unbeheizte Fläche</h2>
+
+    <div id="content-13" class="price-table"></div>
+
+    <div class="button-bar">
+        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-18')">Weiter</button>
+        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+    </div>
+</div>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
