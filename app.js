@@ -3642,6 +3642,12 @@ function renderTableHeader() {
 }
 
 async function sharePdf() {
+  const h2p = window.html2pdf;
+  if (!h2p) {
+    alert("html2pdf ist nicht geladen. Prüfe: Script-Tag in index.html muss VOR app.js stehen und darf nicht geblockt werden.");
+    return;
+  }
+
   const el = document.getElementById("page-40");
   if (!el) return alert("Seite 40 nicht gefunden.");
 
@@ -3651,10 +3657,9 @@ async function sharePdf() {
     ? `Anfrage_${datum}.pdf`
     : `Kostenvoranschlag_${datum}.pdf`;
 
-  // PDF-Modus an (Buttons etc. weg)
   document.body.classList.add("pdf-mode");
 
-  // Logo nur fürs PDF in Seite 40 klonen (damit im PDF ein Logo drin ist)
+  // Logo nur fürs PDF in Seite 40 klonen
   let tempLogo = null;
   const existingLogo = document.querySelector("img.logo");
   if (existingLogo) {
@@ -3663,50 +3668,37 @@ async function sharePdf() {
     el.insertBefore(tempLogo, el.firstChild);
   }
 
-  // einmal rendern lassen
   await new Promise(r => requestAnimationFrame(r));
 
   try {
     const opt = {
       margin: 10,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        backgroundColor: "#ffffff"
-      },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
-    // Wichtig: toPdf() erzwingen, sonst kann pdf null sein
-    const worker = html2pdf().set(opt).from(el).toPdf();
+    const worker = h2p().set(opt).from(el).toPdf();
     const pdf = await worker.get("pdf");
     if (!pdf) throw new Error("PDF-Objekt ist null.");
 
     const blob = pdf.output("blob");
     const file = new File([blob], filename, { type: "application/pdf" });
 
-    // 1) Smartphone: wenn Datei-Share geht -> teilen
-    if (navigator.canShare && navigator.canShare({ files: [file] }) && navigator.share) {
+    // Wenn Teilen mit Datei geht: teilen
+    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
-        await navigator.share({
-          title: filename,
-          text: "PDF aus dem Preis-Kalkulator",
-          files: [file]
-        });
+        await navigator.share({ title: filename, text: "PDF", files: [file] });
         return;
       } catch (e) {
-        // Permission denied / NotAllowedError -> Fallback unten
-        console.warn("Share blockiert, Fallback auf Öffnen/Download:", e);
+        console.warn("Share blockiert, Fallback:", e);
       }
     }
 
-    // 2) Fallback (Desktop + manche Androids):
-    // PDF in neuem Tab öffnen (von dort kann man oft teilen/speichern)
+    // Fallback: Öffnen + Download (damit es überall nutzbar ist)
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank", "noopener");
 
-    // Zusätzlich Download anstoßen (Desktop zuverlässig, Android je nach Gerät)
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
@@ -3714,7 +3706,6 @@ async function sharePdf() {
     a.click();
     a.remove();
 
-    // URL später freigeben
     setTimeout(() => URL.revokeObjectURL(url), 30000);
 
   } catch (err) {
@@ -3727,7 +3718,6 @@ async function sharePdf() {
 }
 
 window.sharePdf = sharePdf;
-
 
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
