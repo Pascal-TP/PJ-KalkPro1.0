@@ -424,7 +424,8 @@ function loadPage14() {
             const container = document.getElementById("page14-content");
 
             let html = "";
-            let gespeicherteWerte = JSON.parse(localStorage.getItem("page14Data") || "{}");
+let headerInserted = false;            
+let gespeicherteWerte = JSON.parse(localStorage.getItem("page14Data") || "{}");
 
             lines.forEach((line, index) => {
 
@@ -552,6 +553,7 @@ function loadPage143() {
 
       const lines = data.split("\n").slice(1);
       let html = "";
+let headerInserted = false;
 
       lines.forEach((line, index) => {
         if (!line.trim()) return;
@@ -1043,6 +1045,7 @@ function loadPage142() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page142Data") || "{}");
@@ -1071,6 +1074,21 @@ function loadPage142() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1338,6 +1356,7 @@ function loadPage18() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page18Data") || "{}");
@@ -1366,6 +1385,21 @@ function loadPage18() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1462,6 +1496,7 @@ function loadPage20() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page20Data") || "{}");
@@ -1490,6 +1525,21 @@ function loadPage20() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1586,6 +1636,7 @@ function loadPage21() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page21Data") || "{}");
@@ -1614,6 +1665,21 @@ function loadPage21() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1710,6 +1776,7 @@ function loadPage22() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page22Data") || "{}");
@@ -1738,6 +1805,21 @@ function loadPage22() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1833,6 +1915,7 @@ function loadPage9() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page9Data") || "{}");
@@ -1861,6 +1944,21 @@ function loadPage9() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -1957,6 +2055,7 @@ function loadPage10() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page10Data") || "{}");
@@ -1985,6 +2084,21 @@ function loadPage10() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2081,6 +2195,7 @@ function loadPage23() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page23Data") || "{}");
@@ -2109,6 +2224,21 @@ function loadPage23() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2205,6 +2335,7 @@ function loadPage24() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page24Data") || "{}");
@@ -2233,6 +2364,21 @@ function loadPage24() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2329,6 +2475,7 @@ function loadPage25() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page25Data") || "{}");
@@ -2357,6 +2504,21 @@ function loadPage25() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2453,6 +2615,7 @@ function loadPage27() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page27Data") || "{}");
@@ -2481,6 +2644,21 @@ function loadPage27() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2577,6 +2755,7 @@ function loadPage28() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page28Data") || "{}");
@@ -2605,6 +2784,21 @@ function loadPage28() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2701,6 +2895,7 @@ function loadPage30() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page30Data") || "{}");
@@ -2729,6 +2924,21 @@ function loadPage30() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2825,6 +3035,7 @@ function loadPage31() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page31Data") || "{}");
@@ -2853,6 +3064,21 @@ function loadPage31() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -2949,6 +3175,7 @@ function loadPage32() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page32Data") || "{}");
@@ -2977,6 +3204,21 @@ function loadPage32() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -3073,6 +3315,7 @@ function loadPage33() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page33Data") || "{}");
@@ -3101,6 +3344,21 @@ function loadPage33() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
@@ -3197,7 +3455,7 @@ function loadPage13() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-
+let headerInserted = false;
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page13Data") || "{}");
 
@@ -3225,6 +3483,21 @@ function loadPage13() {
 
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
+
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
+
 
                     const menge = gespeicherteWerte[index] || 0;
 
