@@ -3,6 +3,7 @@ let logoutTimer;
 let remaining = 600;
 let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
+let page40Promise = null;
 
 
 
@@ -89,8 +90,9 @@ function showPage(id) {
         loadPage143();
     }
     if (id === "page-40") {
-        loadPage40();
-    }
+    page40Promise = loadPage40(); // Promise merken
+}
+
     if (id === "page-14-2") {
         loadPage142();
     }
@@ -3649,6 +3651,14 @@ async function sharePdf() {
   }
 
   const el = document.getElementById("page-40");
+
+// Warten bis Seite 40 komplett aufgebaut ist (wichtig fürs Smartphone!)
+if (page40Promise) {
+  await page40Promise;
+  // kurzer Render-Puffer
+  await new Promise(r => setTimeout(r, 100));
+}
+
   if (!el) return alert("Seite 40 nicht gefunden.");
 
   const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
@@ -3674,7 +3684,8 @@ async function sharePdf() {
     const opt = {
       margin: 10,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollY: -window.scrollY },
+      pagebreak: { mode: ["css", "legacy"] },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 

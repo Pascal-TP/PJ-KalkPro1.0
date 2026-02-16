@@ -241,3 +241,8 @@ body.pdf-mode > img.logo {
   margin: 10px auto 20px auto;
 }
 
+/* verhindert, dass einzelne Zeilen im PDF “abgeschnitten” werden */
+#page-40 .row {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
