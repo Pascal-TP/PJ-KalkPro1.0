@@ -3644,6 +3644,14 @@ function renderTableHeader() {
 }
 
 async function sharePdf() {
+// ---- Mobile-Fix: html2canvas rendert sonst gerne "aus der Mitte" ----
+const oldScrollX = window.scrollX || 0;
+const oldScrollY = window.scrollY || 0;
+
+// Seite nach ganz oben, damit Canvas sauber rendert
+window.scrollTo(0, 0);
+await new Promise(r => requestAnimationFrame(r));
+
   const h2p = window.html2pdf;
   if (!h2p) {
     alert("html2pdf ist nicht geladen. Prüfe: Script-Tag in index.html muss VOR app.js stehen und darf nicht geblockt werden.");
@@ -3684,8 +3692,17 @@ if (page40Promise) {
     const opt = {
       margin: 10,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff", scrollY: -window.scrollY },
-      pagebreak: { mode: ["css", "legacy"] },
+      html2canvas: {
+  scale: 2,
+  useCORS: true,
+  backgroundColor: "#ffffff",
+  scrollX: 0,
+  scrollY: 0,
+  windowWidth: document.documentElement.scrollWidth,
+  windowHeight: document.documentElement.scrollHeight
+},
+pagebreak: { mode: ["css", "legacy"] },
+
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
@@ -3724,6 +3741,8 @@ if (page40Promise) {
     alert("PDF konnte nicht erstellt/geteilt werden:\n" + (err?.message || err));
   } finally {
     if (tempLogo) tempLogo.remove();
+window.scrollTo(oldScrollX, oldScrollY);
+
     document.body.classList.remove("pdf-mode");
   }
 }
