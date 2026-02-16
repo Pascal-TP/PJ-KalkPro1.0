@@ -351,6 +351,19 @@ function formatEuro(n) {
   return x.toLocaleString("de-DE", { minimumFractionDigits: 2 }) + " €";
 }
 
+function renderTableHeader() {
+  return `
+    <div class="row table-header">
+      <div></div>
+      <div>Beschreibung</div>
+      <div>Einheit</div>
+      <div style="text-align:center;">Menge</div>
+      <div style="text-align:right;">Preis / Einheit</div>
+      <div style="text-align:right;">Positionsergebnis</div>
+    </div>
+  `;
+}
+
 function getRabattSumme(total) {
   const t = Number(total) || 0;
   return t * (1 - SHK_RABATT); // = 85%
@@ -424,6 +437,7 @@ function loadPage14() {
             const container = document.getElementById("page14-content");
 
             let html = "";
+            html += renderTableHeader();
             let gespeicherteWerte = JSON.parse(localStorage.getItem("page14Data") || "{}");
 
             lines.forEach((line, index) => {
@@ -726,6 +740,20 @@ if (angebotTyp === "anfrage") {
 } else {
     if (anfrageBox) anfrageBox.style.display = "none";
 }
+
+const container = document.getElementById("summary-content");
+container.innerHTML = "";
+
+container.innerHTML += `
+  <div class="row table-header">
+    <div></div>
+    <div>Beschreibung</div>
+    <div>Einheit</div>
+    <div style="text-align:center;">Menge</div>
+    <div style="text-align:right;">Preis / Einheit</div>
+    <div style="text-align:right;">Positionsergebnis</div>
+  </div>
+`;
 
     const container = document.getElementById("summary-content");
     const hinweiseContainer = document.getElementById("hinweise-content");
@@ -1152,6 +1180,7 @@ function loadPage8() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+            html += renderTableHeader();
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page8Data") || "{}");
