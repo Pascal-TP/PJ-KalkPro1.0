@@ -1166,7 +1166,8 @@ function loadPage8() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-            html += renderTableHeader();
+let headerInserted = false;
+html += renderTableHeader();
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page8Data") || "{}");
@@ -1196,6 +1197,19 @@ function loadPage8() {
                 const preis = parseFloat(colD?.replace(",", "."));
                 if (!isNaN(preis)) {
 
+if (!headerInserted) {
+        html += `
+          <div class="row table-header">
+            <div></div>
+            <div>Beschreibung</div>
+            <div>Einheit</div>
+            <div style="text-align:center;">Menge</div>
+            <div style="text-align:right;">Preis / Einheit</div>
+            <div style="text-align:right;">Positionsergebnis</div>
+          </div>
+        `;
+        headerInserted = true;
+}
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
