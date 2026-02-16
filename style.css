@@ -67,6 +67,7 @@ button:active {
     right: 15px;
     font-size: 14px;
     text-align: right;
+}
 
 #timer {
     position: fixed;
@@ -75,12 +76,13 @@ button:active {
     font-size: 14px;
     text-align: right;
 }
+
 #login-info {
     position: fixed;
     top: 50px;              /* unter dem Timer */
     right: 15px;
     font-size: 14px;
-    text-align: right;      /* GANZ WICHTIG */
+    text-align: right;
 }
 
 /* ================================
