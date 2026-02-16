@@ -1,6 +1,10 @@
 let currentUser = null;
 let logoutTimer;
 let remaining = 600;
+let fraesenHinweisGezeigt = false;
+let fraesenVerwendet = false;
+
+
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
@@ -797,6 +801,11 @@ if (angebotTyp === "anfrage") {
                 container.appendChild(zeile);
                 gesamt += menge * preis;
             }
+const fraesenHinweis = document.getElementById("fraesen-hinweis-print");
+if (fraesenHinweis) {
+  fraesenHinweis.style.display = fraesenVerwendet ? "block" : "none";
+}
+
         });
     }
 
@@ -1209,6 +1218,41 @@ function loadPage8() {
             berechneGesamt8();
         });
 }
+
+function setupFraesenHinweis() {
+  const page8 = document.getElementById("page-8");
+  if (!page8) return;
+
+  page8.addEventListener("input", (e) => {
+    const el = e.target;
+
+    // nur Mengenfelder
+    if (!el.classList.contains("menge-input")) return;
+
+    // nur wenn wirklich etwas eingegeben wird
+    const menge = Number(el.value) || 0;
+    if (menge <= 0) return;
+
+    // merken: Fräsen wurde verwendet
+    fraesenVerwendet = true;
+
+
+    // Hinweis nur einmal anzeigen
+    if (fraesenHinweisGezeigt) return;
+
+    fraesenHinweisGezeigt = true;
+
+    alert(
+      "Achtung!\n\n" +
+      "Je nach Entfernung und Flächengröße kann es zu einem Aufschlag kommen.\n\n" +
+      "Diese Ausführung sollten Sie zwingend anfragen."
+    );
+  });
+}
+
+setupFraesenHinweis();
+
+
 function calcRow8(input, preis, index) {
 
     const row = input.parentElement;
