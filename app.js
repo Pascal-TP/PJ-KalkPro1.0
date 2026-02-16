@@ -935,44 +935,125 @@ function sendMailPage40() {
         `mailto:${mailAdresse}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
+async function imgToDataURL(img) {
+  const src = img.currentSrc || img.src;
+  if (!src || src.startsWith("data:")) return null;
+
+  // absolute URL bauen (wichtig bei relativen Pfaden)
+  const url = new URL(src, window.location.href).toString();
+
+  const res = await fetch(url, { cache: "no-store" });
+  if (!res.ok) throw new Error("Bild konnte nicht geladen werden: " + url);
+
+  const blob = await res.blob();
+
+  return await new Promise((resolve, reject) => {
+    const r = new FileReader();
+    r.onload = () => resolve(r.result);
+    r.onerror = reject;
+    r.readAsDataURL(blob);
+  });
+}
+
+async function inlineImages(root) {
+  const imgs = Array.from(root.querySelectorAll("img"));
+  for (const img of imgs) {
+    try {
+      // warten bis Bild geladen ist (falls Browser noch lädt)
+      if (!img.complete) {
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.onerror = resolve; // wir versuchen trotzdem weiter
+        });
+      }
+
+      const dataUrl = await imgToDataURL(img);
+      if (dataUrl) {
+        img.dataset._origSrc = img.src;
+        img.src = dataUrl;
+      }
+    } catch (e) {
+      console.warn("Inline-Image fehlgeschlagen:", e);
+      // Nicht abbrechen – PDF soll trotzdem entstehen
+    }
+  }
+}
+
+function restoreImages(root) {
+  root.querySelectorAll("img[data-_orig-src]").forEach(img => {
+    img.src = img.dataset._origSrc;
+    delete img.dataset._origSrc;
+  });
+}
+
+async function buildPdfBlob(el) {
+  const opt = {
+    margin: 10,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: {
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: "#ffffff"
+    },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  const worker = html2pdf().set(opt).from(el);
+
+  // robuster als outputPdf("blob") auf manchen Geräten
+  const pdf = await worker.get("pdf");
+  const blob = pdf.output("blob");
+  return blob;
+}
+
 async function sendMailWithPdf() {
-  // 1) Element von Seite 40 holen
   const el = document.getElementById("page-40");
   if (!el) {
     alert("Seite 40 nicht gefunden.");
     return;
   }
 
-  // 2) Dateiname bauen
   const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
   const datum = new Date().toLocaleDateString("de-DE").replaceAll(".", "-");
   const filename = (angebotTyp === "anfrage")
     ? `Anfrage_${datum}.pdf`
     : `Kostenvoranschlag_${datum}.pdf`;
 
-  // 3) PDF als Blob erzeugen
-  const opt = {
-    margin: 10,
-    filename,
-    image: { type: "jpeg", quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
-    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
-  };
+  // Diagnose (damit “macht nichts” sichtbar wird)
+  const isSecure = (location.protocol === "https:" || location.hostname === "localhost");
+  if (!isSecure) {
+    alert("Wichtig: Teilen mit Datei funktioniert auf Android meist nur über HTTPS (nicht file:// oder http://).");
+  }
 
-  const worker = html2pdf().set(opt).from(el);
-  const blob = await worker.outputPdf("blob");
+  document.body.classList.add("pdf-mode");
+  await new Promise(r => requestAnimationFrame(r));
 
-  // 4) Auf Mobile teilen, sonst Download
-  const file = new File([blob], filename, { type: "application/pdf" });
+  try {
+    // Bilder (Logo!) inline machen
+    await inlineImages(el);
+    await new Promise(r => setTimeout(r, 50)); // Mini-Puffer für Repaint
 
-  if (navigator.canShare && navigator.canShare({ files: [file] })) {
-    await navigator.share({
-      title: filename,
-      text: "PDF-Anhang aus dem Preis-Kalkulator",
-      files: [file]
-    });
-  } else {
-    // Desktop-Fallback: Download
+    const blob = await buildPdfBlob(el);
+    const file = new File([blob], filename, { type: "application/pdf" });
+
+    const hasShare = !!navigator.share;
+    const canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+
+    if (!hasShare) {
+      alert("Teilen wird von diesem Browser nicht unterstützt. PDF wird heruntergeladen.");
+    } else if (!canShareFiles) {
+      alert("Teilen mit DATEI wird hier nicht unterstützt (canShare=false). PDF wird heruntergeladen.");
+    } else {
+      await navigator.share({
+        title: filename,
+        text: "PDF-Anhang aus dem Preis-Kalkulator",
+        files: [file]
+      });
+      return; // fertig
+    }
+
+    // Fallback Download
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -982,7 +1063,12 @@ async function sendMailWithPdf() {
     a.remove();
     URL.revokeObjectURL(url);
 
-    alert("PDF wurde heruntergeladen. Bitte in deiner Mail manuell anhängen.");
+  } catch (err) {
+    console.error("sendMailWithPdf Fehler:", err);
+    alert("Fehler beim Erstellen/Teilen der PDF. Bitte Konsole prüfen:\n" + (err?.message || err));
+  } finally {
+    restoreImages(el);
+    document.body.classList.remove("pdf-mode");
   }
 }
 

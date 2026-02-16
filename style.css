@@ -218,3 +218,20 @@ button:active {
 .table-header > div {
   opacity: 0.9;
 }
+
+/* ===== PDF Mode (für html2pdf/html2canvas) ===== */
+body.pdf-mode #timer,
+body.pdf-mode #login-info,
+body.pdf-mode #release-info,
+body.pdf-mode .button-bar,
+body.pdf-mode button {
+  display: none !important;
+}
+
+/* Logo auf Seite 40 fürs PDF etwas kleiner/sauber */
+.logo-pdf {
+  width: 260px;
+  max-width: 70%;
+  margin: 10px auto 20px auto;
+}
+
