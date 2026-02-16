@@ -1167,7 +1167,6 @@ function loadPage8() {
             const lines = data.split("\n").slice(1);
             let html = "";
 let headerInserted = false;
-html += renderTableHeader();
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page8Data") || "{}");
