@@ -3261,6 +3261,28 @@ function berechneGesamt13() {
     }
 }
 
+function setupAutoClearZeroInputs() {
+  document.addEventListener("focusin", (e) => {
+    const el = e.target;
+    if (el && el.classList && el.classList.contains("menge-input")) {
+      if (el.value === "0") el.value = "";
+    }
+  });
+
+  // Optional: falls man mit Wheel/Arrow Keys aus Versehen wieder 0 reinbekommt
+  document.addEventListener("input", (e) => {
+    const el = e.target;
+    if (el && el.classList && el.classList.contains("menge-input")) {
+      if (el.value === "0") {
+        // wenn wirklich 0 eingegeben wurde, lassen wir es drin
+        // -> daher NICHT löschen, außer du willst NIE 0 erlauben
+      }
+    }
+  });
+}
+
+setupAutoClearZeroInputs();
+
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
 
