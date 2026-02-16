@@ -1244,8 +1244,8 @@ function setupFraesenHinweis() {
 
     alert(
       "Achtung!\n\n" +
-      "Je nach Entfernung und Flächengröße kann es zu einem Aufschlag kommen.\n\n" +
-      "Diese Ausführung sollten Sie zwingend anfragen."
+      "Bei Frässystemen können je nach Entfernung und Flächengröße zusätzliche Aufschläge anfallen.\n\n" +
+      "Bitte erfragen Sie hierzu ein individuelles Angebot."
     );
   });
 }
