@@ -193,3 +193,18 @@ button:active {
   opacity: 0.9;
 }
 
+@media print {
+
+  /* alles ausblenden */
+  .page { display: none !important; }
+
+  /* nur Seite 40 drucken */
+  #page-40 { display: block !important; }
+
+  /* Buttons/Nav etc. ausblenden */
+  button, .nav, #timer, #login-info, #release-info {
+    display: none !important;
+  }
+}
+
+

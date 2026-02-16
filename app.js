@@ -858,35 +858,7 @@ function direktZumAngebot() {
 }
 
 function printPage40() {
-
-    const original = document.getElementById("page-40").cloneNode(true);
-
-    // Buttons entfernen
-    original.querySelectorAll("button").forEach(b => b.remove());
-
-    // Logo hinzufügen (falls es global oben liegt)
-    const logo = document.querySelector(".logo");
-    const logoHTML = logo ? logo.outerHTML : "";
-
-    const w = window.open("", "PRINT", "height=800,width=1000");
-
-    w.document.write(`
-        <html>
-        <head>
-            <title>Kostenvoranschlag</title>
-            <link rel="stylesheet" href="style.css">
-        </head>
-        <body>
-            ${logoHTML}
-            ${original.innerHTML}
-        </body>
-        </html>
-    `);
-
-    w.document.close();
-    w.focus();
-    w.print();
-    w.close();
+  window.print();
 }
 
 function sendMailPage40() {
