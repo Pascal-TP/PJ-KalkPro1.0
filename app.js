@@ -4,6 +4,9 @@ let remaining = 600;
 let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
 let lastPdfFile = null;
+let lastPdfBlob = null;
+let lastPdfName = null;
+let lastPdfUrl = null;
 
 
 
@@ -1006,8 +1009,45 @@ async function buildPdfBlob(el) {
   // robuster als outputPdf("blob") auf manchen Geräten
   const pdf = await worker.get("pdf");
   const blob = pdf.output("blob");
+// alte URL freigeben
+if (lastPdfUrl) URL.revokeObjectURL(lastPdfUrl);
+
+lastPdfBlob = blob;
+lastPdfName = filename;
+lastPdfUrl = URL.createObjectURL(blob);
+
+// Link/Button sichtbar machen
+const a = document.getElementById("pdfOpenLink");
+const b = document.getElementById("pdfDownloadBtn");
+
+if (a) {
+  a.href = lastPdfUrl;
+  a.classList.remove("hidden");
+  a.textContent = "PDF öffnen";
+}
+if (b) b.classList.remove("hidden");
+
+// Optional: auf Desktop weiterhin direkt teilen/Download – aber auf Android lieber NICHT erzwingen
+
   return blob;
 }
+
+function downloadLastPdf() {
+  if (!lastPdfBlob || !lastPdfName) return alert("Noch keine PDF erstellt.");
+
+  const url = URL.createObjectURL(lastPdfBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = lastPdfName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  // URL nach kurzem Timeout freigeben (sonst bricht Download manchmal ab)
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+window.downloadLastPdf = downloadLastPdf;
+
 
 async function sendMailWithPdf() {
   const el = document.getElementById("page-40");
