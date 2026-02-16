@@ -1020,54 +1020,66 @@ async function sendMailWithPdf() {
     ? `Anfrage_${datum}.pdf`
     : `Kostenvoranschlag_${datum}.pdf`;
 
-  // Diagnose (damit “macht nichts” sichtbar wird)
-  const isSecure = (location.protocol === "https:" || location.hostname === "localhost");
-  if (!isSecure) {
-    alert("Wichtig: Teilen mit Datei funktioniert auf Android meist nur über HTTPS (nicht file:// oder http://).");
+  // PDF-Mode aktivieren (Buttons/Timer etc. weg)
+  document.body.classList.add("pdf-mode");
+
+  // 1) temporäres Logo in Seite 40 einfügen (nur für PDF)
+  let tempLogo = null;
+  const existingLogo = document.querySelector("img.logo");
+  if (existingLogo) {
+    tempLogo = existingLogo.cloneNode(true);
+    tempLogo.classList.add("temp-pdf-logo");
+    // wichtig: NICHT wieder "logo" als alleinige Klasse verwenden, sonst greift display:none
+    // clone hat bereits class="logo", daher lassen wir sie drauf, aber geben extra Klasse + CSS in page-40
+    el.insertBefore(tempLogo, el.firstChild);
   }
 
-  document.body.classList.add("pdf-mode");
+  // Reflow/Render abwarten
   await new Promise(r => requestAnimationFrame(r));
 
   try {
-    // Bilder (Logo!) inline machen
-    await inlineImages(el);
-    await new Promise(r => setTimeout(r, 50)); // Mini-Puffer für Repaint
+    const opt = {
+      margin: 10,
+      filename,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+    };
 
-    const blob = await buildPdfBlob(el);
+    // WICHTIG: toPdf() erzwingen, sonst ist pdf manchmal null
+    const worker = html2pdf().set(opt).from(el).toPdf();
+    const pdf = await worker.get("pdf");
+    if (!pdf) throw new Error("PDF-Objekt konnte nicht erstellt werden (pdf=null).");
+
+    const blob = pdf.output("blob");
     const file = new File([blob], filename, { type: "application/pdf" });
 
-    const hasShare = !!navigator.share;
-    const canShareFiles = !!(navigator.canShare && navigator.canShare({ files: [file] }));
-
-    if (!hasShare) {
-      alert("Teilen wird von diesem Browser nicht unterstützt. PDF wird heruntergeladen.");
-    } else if (!canShareFiles) {
-      alert("Teilen mit DATEI wird hier nicht unterstützt (canShare=false). PDF wird heruntergeladen.");
-    } else {
+    // Share (Smartphone) sonst Download (Desktop)
+    if (navigator.canShare && navigator.canShare({ files: [file] })) {
       await navigator.share({
         title: filename,
         text: "PDF-Anhang aus dem Preis-Kalkulator",
         files: [file]
       });
-      return; // fertig
-    }
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
 
-    // Fallback Download
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+      alert("PDF wurde heruntergeladen. Bitte in Outlook manuell anhängen.");
+    }
 
   } catch (err) {
     console.error("sendMailWithPdf Fehler:", err);
-    alert("Fehler beim Erstellen/Teilen der PDF. Bitte Konsole prüfen:\n" + (err?.message || err));
+    alert("Fehler beim Erstellen/Teilen der PDF:\n" + (err?.message || err));
   } finally {
-    restoreImages(el);
+    // Cleanup: temporäres Logo entfernen + PDF-Mode aus
+    if (tempLogo) tempLogo.remove();
     document.body.classList.remove("pdf-mode");
   }
 }

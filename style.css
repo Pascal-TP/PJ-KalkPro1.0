@@ -228,8 +228,14 @@ body.pdf-mode button {
   display: none !important;
 }
 
-/* Logo auf Seite 40 fürs PDF etwas kleiner/sauber */
-.logo-pdf {
+/* PDF Mode: das normale Seiten-Logo oben ausblenden */
+body.pdf-mode > img.logo {
+  display: none !important;
+}
+
+/* temporäres PDF-Logo innerhalb Seite 40 */
+#page-40 .temp-pdf-logo {
+  display: block;
   width: 260px;
   max-width: 70%;
   margin: 10px auto 20px auto;
