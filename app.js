@@ -79,7 +79,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-function showPage(id) {
+async function function showPage(id) {
     document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
     document.getElementById(id).classList.add("active");
 
@@ -90,7 +90,13 @@ function showPage(id) {
         loadPage143();
     }
     if (id === "page-40") {
-    page40Promise = loadPage40(); // Promise merken
+  showLoader40(true);
+  try {
+    page40Promise = loadPage40();
+    await page40Promise;
+  } finally {
+    showLoader40(false);
+  }
 }
 
     if (id === "page-14-2") {
@@ -3761,6 +3767,11 @@ async function sharePdf() {
 
 window.sharePdf = sharePdf;
 
+function showLoader40(show) {
+  const l = document.getElementById("loader40");
+  if (!l) return;
+  l.classList.toggle("hidden", !show);
+}
 
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
@@ -3843,6 +3854,7 @@ window.berechneGesamt33 = berechneGesamt33;
 window.loadPage13 = loadPage13;
 window.calcRow13 = calcRow13;
 window.berechneGesamt13 = berechneGesamt13;
+
 
 
 

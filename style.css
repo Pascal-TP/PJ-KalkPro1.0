@@ -246,3 +246,35 @@ body.pdf-mode > img.logo {
   break-inside: avoid;
   page-break-inside: avoid;
 }
+
+.loader {
+  position: fixed;
+  inset: 0;
+  background: rgba(255,255,255,0.85);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border: 6px solid #ccc;
+  border-top-color: #0b2a4a;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.loader-text {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #0b2a4a;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+body.pdf-mode #loader40 { display: none !important; }
+
