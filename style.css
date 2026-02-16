@@ -218,38 +218,3 @@ button:active {
 .table-header > div {
   opacity: 0.9;
 }
-
-/* ===== PDF Mode (für html2pdf/html2canvas) ===== */
-body.pdf-mode #timer,
-body.pdf-mode #login-info,
-body.pdf-mode #release-info,
-body.pdf-mode .button-bar,
-body.pdf-mode button {
-  display: none !important;
-}
-
-/* PDF Mode: das normale Seiten-Logo oben ausblenden */
-body.pdf-mode > img.logo {
-  display: none !important;
-}
-
-/* temporäres PDF-Logo innerhalb Seite 40 */
-#page-40 .temp-pdf-logo {
-  display: block;
-  width: 260px;
-  max-width: 70%;
-  margin: 10px auto 20px auto;
-}
-
-#pdfOpenLink {
-  display: inline-block;
-  background: #0b2a4a;
-  color: #fff;
-  padding: 12px 22px;
-  margin: 6px;
-  border-radius: 6px;
-  font-weight: 600;
-  text-decoration: none;
-}
-#pdfOpenLink:hover { background: #163f6f; }
-

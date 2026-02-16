@@ -11,7 +11,7 @@
 <img src="logo.png" class="logo">
 
 <!-- Countdown -->
-<div id="release-info">Release: V1.0.6</div>
+<div id="release-info">Release: V1.0.5</div>
 <div id="timer">Logout in: 10:00</div>
 
 <!-- NEU: Angemeldet als -->
@@ -225,12 +225,7 @@
     <div class="button-bar">
         <button onclick="showPage('page-3')">Zurück</button>
         <button onclick="printPage40()">Drucken / speichern als PDF</button>
-        <button onclick="sendMailPage40()">Senden als Text-Mail</button>
-        <button onclick="sendMailWithPdf()">PDF erstellen & teilen</button>
-<button id="btnSharePdf" class="hidden" onclick="shareLastPdf()">PDF jetzt teilen</button>
-<a id="pdfOpenLink" class="hidden" target="_blank" rel="noopener">PDF öffnen</a>
-<button id="pdfDownloadBtn" class="hidden" onclick="downloadLastPdf()">PDF herunterladen</button>
-
+        <button onclick="sendMailPage40()">Senden als Mail</button>
         <button onclick="clearInputs()">Eingaben löschen</button>
     </div>
 </div>
@@ -521,7 +516,7 @@
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
 </div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <script type="module" src="app.js"></script>
 </body>
 </html>
