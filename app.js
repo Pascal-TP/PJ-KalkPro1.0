@@ -79,81 +79,40 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-async function function showPage(id) {
-    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
+async function showPage(id) {
+  document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
 
-    if (id === "page-14") {
-        loadPage14();
+  if (id === "page-14") loadPage14();
+  if (id === "page-14-3") loadPage143();
+  if (id === "page-14-2") loadPage142();
+  if (id === "page-8") loadPage8();
+  if (id === "page-18") loadPage18();
+  if (id === "page-20") loadPage20();
+  if (id === "page-21") loadPage21();
+  if (id === "page-22") loadPage22();
+  if (id === "page-9") loadPage9();
+  if (id === "page-10") loadPage10();
+  if (id === "page-23") loadPage23();
+  if (id === "page-24") loadPage24();
+  if (id === "page-25") loadPage25();
+  if (id === "page-27") loadPage27();
+  if (id === "page-28") loadPage28();
+  if (id === "page-30") loadPage30();
+  if (id === "page-31") loadPage31();
+  if (id === "page-32") loadPage32();
+  if (id === "page-33") loadPage33();
+  if (id === "page-13") loadPage13();
+
+  if (id === "page-40") {
+    showLoader40(true);
+    try {
+      page40Promise = loadPage40();
+      await page40Promise;
+    } finally {
+      showLoader40(false);
     }
-    if (id === "page-14-3") {
-        loadPage143();
-    }
-    if (id === "page-40") {
-  showLoader40(true);
-  try {
-    page40Promise = loadPage40();
-    await page40Promise;
-  } finally {
-    showLoader40(false);
   }
-}
-
-    if (id === "page-14-2") {
-        loadPage142();
-    }
-    if (id === "page-8") {
-        loadPage8();
-    }
-    if (id === "page-18") {
-        loadPage18();
-    }
-    if (id === "page-20") {
-        loadPage20();
-    }
-    if (id === "page-21") {
-        loadPage21();
-    }
-    if (id === "page-22") {
-        loadPage22();
-    }
-    if (id === "page-9") {
-        loadPage9();
-    }
-    if (id === "page-10") {
-        loadPage10();
-    }
-    if (id === "page-23") {
-        loadPage23();
-    }
-    if (id === "page-24") {
-        loadPage24();
-    }
-    if (id === "page-25") {
-        loadPage25();
-    }
-    if (id === "page-27") {
-        loadPage27();
-    }
-    if (id === "page-28") {
-        loadPage28();
-    }
-    if (id === "page-30") {
-        loadPage30();
-    }
-    if (id === "page-31") {
-        loadPage31();
-    }
-    if (id === "page-32") {
-        loadPage32();
-    }
-    if (id === "page-33") {
-        loadPage33();
-    }
-    if (id === "page-13") {
-        loadPage13();
-    }
-
 }
 
 async function login() {
