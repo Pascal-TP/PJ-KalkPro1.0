@@ -65,20 +65,6 @@ const auth = getAuth(fbApp);
 
 const db = getFirestore(fbApp);
 
-onAuthStateChanged(auth, user => {
-  const info = document.getElementById("login-info");
-
-  if (user) {
-    if (info) {
-      info.innerText = "Angemeldet als: " + user.email;
-    }
-  } else {
-    if (info) info.innerText = "";
-    updateAdminUI_();
-    showPage("page-login");
-  }
-});
-
 async function showPage(id) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   document.getElementById(id).classList.add("active");
