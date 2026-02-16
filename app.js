@@ -935,6 +935,58 @@ function sendMailPage40() {
         `mailto:${mailAdresse}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
+async function sendMailWithPdf() {
+  // 1) Element von Seite 40 holen
+  const el = document.getElementById("page-40");
+  if (!el) {
+    alert("Seite 40 nicht gefunden.");
+    return;
+  }
+
+  // 2) Dateiname bauen
+  const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
+  const datum = new Date().toLocaleDateString("de-DE").replaceAll(".", "-");
+  const filename = (angebotTyp === "anfrage")
+    ? `Anfrage_${datum}.pdf`
+    : `Kostenvoranschlag_${datum}.pdf`;
+
+  // 3) PDF als Blob erzeugen
+  const opt = {
+    margin: 10,
+    filename,
+    image: { type: "jpeg", quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
+  };
+
+  const worker = html2pdf().set(opt).from(el);
+  const blob = await worker.outputPdf("blob");
+
+  // 4) Auf Mobile teilen, sonst Download
+  const file = new File([blob], filename, { type: "application/pdf" });
+
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    await navigator.share({
+      title: filename,
+      text: "PDF-Anhang aus dem Preis-Kalkulator",
+      files: [file]
+    });
+  } else {
+    // Desktop-Fallback: Download
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    alert("PDF wurde heruntergeladen. Bitte in deiner Mail manuell anhängen.");
+  }
+}
+
+
 function clearInputs() {
 
     // localStorage komplett löschen
@@ -3722,6 +3774,7 @@ window.berechneGesamt33 = berechneGesamt33;
 window.loadPage13 = loadPage13;
 window.calcRow13 = calcRow13;
 window.berechneGesamt13 = berechneGesamt13;
+window.sendMailWithPdf = sendMailWithPdf;
 
 
 
