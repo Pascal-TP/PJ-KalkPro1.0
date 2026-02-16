@@ -3644,30 +3644,35 @@ function renderTableHeader() {
 }
 
 async function sharePdf() {
-// ---- Mobile-Fix: html2canvas rendert sonst gerne "aus der Mitte" ----
-const oldScrollX = window.scrollX || 0;
-const oldScrollY = window.scrollY || 0;
+  // ---- Mobile-Fix: html2canvas rendert sonst gerne "aus der Mitte" ----
+  const oldScrollX = window.scrollX || 0;
+  const oldScrollY = window.scrollY || 0;
 
-// Seite nach ganz oben, damit Canvas sauber rendert
-window.scrollTo(0, 0);
-await new Promise(r => requestAnimationFrame(r));
+  // Seite nach ganz oben, damit Canvas sauber rendert
+  window.scrollTo(0, 0);
+  await new Promise(r => requestAnimationFrame(r));
 
   const h2p = window.html2pdf;
   if (!h2p) {
     alert("html2pdf ist nicht geladen. Prüfe: Script-Tag in index.html muss VOR app.js stehen und darf nicht geblockt werden.");
+    window.scrollTo(oldScrollX, oldScrollY);
     return;
   }
 
   const el = document.getElementById("page-40");
 
-// Warten bis Seite 40 komplett aufgebaut ist (wichtig fürs Smartphone!)
-if (page40Promise) {
-  await page40Promise;
-  // kurzer Render-Puffer
-  await new Promise(r => setTimeout(r, 100));
-}
+  // Warten bis Seite 40 komplett aufgebaut ist (wichtig fürs Smartphone!)
+  if (typeof page40Promise !== "undefined" && page40Promise) {
+    await page40Promise;
+    // kurzer Render-Puffer
+    await new Promise(r => setTimeout(r, 150));
+  }
 
-  if (!el) return alert("Seite 40 nicht gefunden.");
+  if (!el) {
+    alert("Seite 40 nicht gefunden.");
+    window.scrollTo(oldScrollX, oldScrollY);
+    return;
+  }
 
   const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
   const datum = new Date().toLocaleDateString("de-DE").replaceAll(".", "-");
@@ -3688,21 +3693,25 @@ if (page40Promise) {
 
   await new Promise(r => requestAnimationFrame(r));
 
+  // Desktop-Erkennung: hier KEIN navigator.share() verwenden
+  const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+    (navigator.maxTouchPoints > 1 && window.matchMedia("(max-width: 1024px)").matches);
+
   try {
     const opt = {
       margin: 10,
       image: { type: "jpeg", quality: 0.98 },
       html2canvas: {
-  scale: 2,
-  useCORS: true,
-  backgroundColor: "#ffffff",
-  scrollX: 0,
-  scrollY: 0,
-  windowWidth: document.documentElement.scrollWidth,
-  windowHeight: document.documentElement.scrollHeight
-},
-pagebreak: { mode: ["css", "legacy"] },
-
+        scale: 2,
+        useCORS: true,
+        backgroundColor: "#ffffff",
+        scrollX: 0,
+        scrollY: 0,
+        windowWidth: document.documentElement.scrollWidth,
+        windowHeight: document.documentElement.scrollHeight
+      },
+      pagebreak: { mode: ["css", "legacy"] },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
@@ -3713,20 +3722,24 @@ pagebreak: { mode: ["css", "legacy"] },
     const blob = pdf.output("blob");
     const file = new File([blob], filename, { type: "application/pdf" });
 
-    // Wenn Teilen mit Datei geht: teilen
-    if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+    // 1) NUR AUF MOBILE teilen versuchen (damit auf Windows nicht dieses Share-Fenster aufgeht)
+    if (isMobile && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({ title: filename, text: "PDF", files: [file] });
         return;
       } catch (e) {
-        console.warn("Share blockiert, Fallback:", e);
+        console.warn("Mobile Share blockiert/abgebrochen, Fallback:", e);
+        // Fallback unten
       }
     }
 
-    // Fallback: Öffnen + Download (damit es überall nutzbar ist)
+    // 2) Fallback: Öffnen + Download (Desktop immer, Mobile wenn Share nicht geht)
     const url = URL.createObjectURL(blob);
+
+    // Öffnen ist oft der bequemste Weg, um danach in Outlook/WhatsApp manuell anzuhängen
     window.open(url, "_blank", "noopener");
 
+    // Download als verlässlicher Pfad (vor allem für Outlook)
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
@@ -3741,21 +3754,13 @@ pagebreak: { mode: ["css", "legacy"] },
     alert("PDF konnte nicht erstellt/geteilt werden:\n" + (err?.message || err));
   } finally {
     if (tempLogo) tempLogo.remove();
-window.scrollTo(oldScrollX, oldScrollY);
-
     document.body.classList.remove("pdf-mode");
+    window.scrollTo(oldScrollX, oldScrollY);
   }
 }
 
 window.sharePdf = sharePdf;
 
-function openLastPdf() {
-  if (!window._lastPdfBlob) return alert("Bitte zuerst 'PDF teilen' drücken.");
-  const url = URL.createObjectURL(window._lastPdfBlob);
-  window.open(url, "_blank", "noopener");
-  setTimeout(() => URL.revokeObjectURL(url), 30000);
-}
-window.openLastPdf = openLastPdf;
 
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
