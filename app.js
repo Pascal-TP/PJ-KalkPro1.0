@@ -3,6 +3,8 @@ let logoutTimer;
 let remaining = 600;
 let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
+let lastPdfFile = null;
+
 
 
 
@@ -1009,10 +1011,7 @@ async function buildPdfBlob(el) {
 
 async function sendMailWithPdf() {
   const el = document.getElementById("page-40");
-  if (!el) {
-    alert("Seite 40 nicht gefunden.");
-    return;
-  }
+  if (!el) return alert("Seite 40 nicht gefunden.");
 
   const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
   const datum = new Date().toLocaleDateString("de-DE").replaceAll(".", "-");
@@ -1020,67 +1019,93 @@ async function sendMailWithPdf() {
     ? `Anfrage_${datum}.pdf`
     : `Kostenvoranschlag_${datum}.pdf`;
 
-  // PDF-Mode aktivieren (Buttons/Timer etc. weg)
   document.body.classList.add("pdf-mode");
 
-  // 1) temporäres Logo in Seite 40 einfügen (nur für PDF)
+  // temporäres Logo wie bei dir (funktioniert ja jetzt gut)
   let tempLogo = null;
   const existingLogo = document.querySelector("img.logo");
   if (existingLogo) {
     tempLogo = existingLogo.cloneNode(true);
     tempLogo.classList.add("temp-pdf-logo");
-    // wichtig: NICHT wieder "logo" als alleinige Klasse verwenden, sonst greift display:none
-    // clone hat bereits class="logo", daher lassen wir sie drauf, aber geben extra Klasse + CSS in page-40
     el.insertBefore(tempLogo, el.firstChild);
   }
 
-  // Reflow/Render abwarten
   await new Promise(r => requestAnimationFrame(r));
 
   try {
     const opt = {
       margin: 10,
-      filename,
       image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+      // Android/Outlook mögen kleinere PDFs oft lieber:
+      html2canvas: { scale: 1.6, useCORS: true, backgroundColor: "#ffffff" },
       jsPDF: { unit: "mm", format: "a4", orientation: "portrait" }
     };
 
-    // WICHTIG: toPdf() erzwingen, sonst ist pdf manchmal null
     const worker = html2pdf().set(opt).from(el).toPdf();
     const pdf = await worker.get("pdf");
     if (!pdf) throw new Error("PDF-Objekt konnte nicht erstellt werden (pdf=null).");
 
     const blob = pdf.output("blob");
-    const file = new File([blob], filename, { type: "application/pdf" });
+    lastPdfFile = new File([blob], filename, { type: "application/pdf" });
 
-    // Share (Smartphone) sonst Download (Desktop)
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({
-        title: filename,
-        text: "PDF-Anhang aus dem Preis-Kalkulator",
-        files: [file]
-      });
-    } else {
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      URL.revokeObjectURL(url);
+    // Share-Button aktivieren (2-Schritt)
+    const btn2 = document.getElementById("btnSharePdf");
+    if (btn2) btn2.classList.remove("hidden");
 
-      alert("PDF wurde heruntergeladen. Bitte in Outlook manuell anhängen.");
-    }
+    // 1. Versuch direkt zu teilen
+    await shareLastPdf(true);
 
   } catch (err) {
-    console.error("sendMailWithPdf Fehler:", err);
-    alert("Fehler beim Erstellen/Teilen der PDF:\n" + (err?.message || err));
+    console.error(err);
+    alert("PDF wurde erstellt, aber Teilen ging nicht. Nutze 'PDF jetzt teilen' oder lade die PDF herunter und hänge sie in Outlook an.\n\n" + (err?.message || err));
   } finally {
-    // Cleanup: temporäres Logo entfernen + PDF-Mode aus
     if (tempLogo) tempLogo.remove();
     document.body.classList.remove("pdf-mode");
+  }
+}
+async function shareLastPdf(silent = false) {
+  try {
+    if (!lastPdfFile) {
+      alert("Noch keine PDF erstellt. Bitte zuerst 'PDF erstellen & teilen' drücken.");
+      return;
+    }
+
+    if (navigator.canShare && navigator.canShare({ files: [lastPdfFile] })) {
+      await navigator.share({
+        title: lastPdfFile.name,
+        text: "PDF aus dem Preis-Kalkulator",
+        files: [lastPdfFile]
+      });
+      return;
+    }
+
+    // Fallback: Download (für Outlook am verlässlichsten)
+    const url = URL.createObjectURL(lastPdfFile);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = lastPdfFile.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    if (!silent) alert("Teilen mit Datei wird hier nicht unterstützt. PDF wurde heruntergeladen – bitte in Outlook manuell anhängen.");
+
+  } catch (e) {
+    console.error("shareLastPdf:", e);
+
+    // Typisch Android: NotAllowedError / Permission denied
+    // -> Download-Fallback
+    const url = URL.createObjectURL(lastPdfFile);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = lastPdfFile.name;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+
+    if (!silent) alert("Teilen wurde vom System/Brower blockiert (Permission denied). PDF wurde heruntergeladen – bitte in Outlook manuell anhängen.");
   }
 }
 
@@ -3873,6 +3898,8 @@ window.loadPage13 = loadPage13;
 window.calcRow13 = calcRow13;
 window.berechneGesamt13 = berechneGesamt13;
 window.sendMailWithPdf = sendMailWithPdf;
+window.shareLastPdf = shareLastPdf;
+
 
 
 
