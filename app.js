@@ -454,6 +454,20 @@ let gespeicherteWerte = JSON.parse(localStorage.getItem("page14Data") || "{}");
 
                 if (preisVorhanden) {
 
+if (!headerInserted) {
+    html += `
+      <div class="row table-header">
+        <div></div>
+        <div>Beschreibung</div>
+        <div>Einheit</div>
+        <div style="text-align:center;">Menge</div>
+        <div style="text-align:right;">Preis / Einheit</div>
+        <div style="text-align:right;">Positionsergebnis</div>
+      </div>
+    `;
+    headerInserted = true;
+  } 
+
                     const preis = parseFloat(colD.replace(",", "."));
                     const gespeicherteMenge = gespeicherteWerte[index] || 0;
 
@@ -581,6 +595,20 @@ let headerInserted = false;
         const preisVorhanden = colD && !isNaN(parseFloat(colD.replace(",", ".")));
 
         if (preisVorhanden) {
+
+if (!headerInserted) {
+    html += `
+      <div class="row table-header">
+        <div></div>
+        <div>Beschreibung</div>
+        <div>Einheit</div>
+        <div style="text-align:center;">Menge</div>
+        <div style="text-align:right;">Preis / Einheit</div>
+        <div style="text-align:right;">Positionsergebnis</div>
+      </div>
+    `;
+    headerInserted = true;
+  } 
 
           const preis = parseFloat(colD.replace(",", "."));
           const savedValue = localStorage.getItem("page143Data" + index) || "0";
