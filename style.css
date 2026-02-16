@@ -218,3 +218,26 @@ button:active {
 .table-header > div {
   opacity: 0.9;
 }
+
+/* ===== PDF-Modus (für html2pdf/html2canvas) ===== */
+body.pdf-mode .button-bar,
+body.pdf-mode button,
+body.pdf-mode #timer,
+body.pdf-mode #login-info,
+body.pdf-mode #release-info {
+  display: none !important;
+}
+
+/* Das „normale“ Logo oben außerhalb von Seite 40 im PDF ausblenden */
+body.pdf-mode > img.logo {
+  display: none !important;
+}
+
+/* Temporäres PDF-Logo in Seite 40 */
+#page-40 .temp-pdf-logo {
+  display: block;
+  width: 260px;
+  max-width: 70%;
+  margin: 10px auto 20px auto;
+}
+
