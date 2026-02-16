@@ -734,7 +734,19 @@ if (angebotTyp === "anfrage") {
     container.innerHTML = "";
     hinweiseContainer.innerHTML = "";
 
+container.innerHTML += `
+  <div class="row table-header">
+    <div></div>
+    <div>Beschreibung</div>
+    <div>Einheit</div>
+    <div style="text-align:center;">Menge</div>
+    <div style="text-align:right;">Preis / Einheit</div>
+    <div style="text-align:right;">Positionsergebnis</div>
+  </div>
+`;
+
     let gesamt = 0;
+
 
     const seitenConfig = [
         { key: "page14Data",  csv: "ndf1.csv" },
@@ -801,13 +813,15 @@ if (angebotTyp === "anfrage") {
                 container.appendChild(zeile);
                 gesamt += menge * preis;
             }
+
+        });
+    }
+
 const fraesenHinweis = document.getElementById("fraesen-hinweis-print");
 if (fraesenHinweis) {
   fraesenHinweis.style.display = fraesenVerwendet ? "block" : "none";
 }
 
-        });
-    }
 
     const angebotspreisEl = document.getElementById("angebotspreis");
     if (angebotspreisEl) {
@@ -1152,6 +1166,7 @@ function loadPage8() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
+            html += renderTableHeader();
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page8Data") || "{}");
@@ -3298,6 +3313,19 @@ function setupAutoClearZeroInputs() {
 }
 
 setupAutoClearZeroInputs();
+
+function renderTableHeader() {
+  return `
+    <div class="row table-header">
+      <div></div>
+      <div>Beschreibung</div>
+      <div>Einheit</div>
+      <div style="text-align:center;">Menge</div>
+      <div style="text-align:right;">Preis / Einheit</div>
+      <div style="text-align:right;">Positionsergebnis</div>
+    </div>
+  `;
+}
 
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
