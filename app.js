@@ -3749,6 +3749,14 @@ window.scrollTo(oldScrollX, oldScrollY);
 
 window.sharePdf = sharePdf;
 
+function openLastPdf() {
+  if (!window._lastPdfBlob) return alert("Bitte zuerst 'PDF teilen' drücken.");
+  const url = URL.createObjectURL(window._lastPdfBlob);
+  window.open(url, "_blank", "noopener");
+  setTimeout(() => URL.revokeObjectURL(url), 30000);
+}
+window.openLastPdf = openLastPdf;
+
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
 
