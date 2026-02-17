@@ -6,6 +6,9 @@ let fraesenVerwendet = false;
 let page40Promise = null;
 
 
+		// -----------------------------
+		// Firebase - E-Mail+Passwort
+		// -----------------------------
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
@@ -61,9 +64,11 @@ const auth = getAuth(fbApp);
   });
 })();
 
-
-
 const db = getFirestore(fbApp);
+
+		// -----------------------------
+		// showPage
+		// -----------------------------
 
 async function showPage(id) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
@@ -100,6 +105,10 @@ async function showPage(id) {
     }
   }
 }
+
+		// -----------------------------
+		// LOGIN - LOGOUT - PASSWORD
+		// -----------------------------
 
 async function login() {
   const email = loginUser.value.trim();
@@ -159,7 +168,6 @@ async function logout() {
     alert("Abmelden fehlgeschlagen");
   }
 }
-
 
 async function forgotPassword() {
   const email = loginUser.value.trim();
@@ -231,8 +239,12 @@ async function exportLoginLog() {
 
   const q = query(collection(db, "loginLogs"), orderBy("time", "desc"));
   const snap = await getDocs(q);
+ 
+		// -----------------------------
+		// LOGBUCH - NUR FÜR ADMIN
+		// -----------------------------
 
-  let csv = "time;email;event\n";
+ let csv = "time;email;event\n";
   snap.forEach(d => {
     const x = d.data();
     const time = x.time?.toDate ? x.time.toDate().toISOString() : "";
@@ -251,7 +263,6 @@ async function exportLoginLog() {
   URL.revokeObjectURL(url);
 }
 
-
 function updateAdminUI_() {
   const btn = document.getElementById("btnExportLog");
   if (!btn) return;
@@ -261,6 +272,10 @@ function updateAdminUI_() {
 
   btn.classList.toggle("hidden", !isAdmin);
 }
+
+		// -----------------------------
+		//  LOGOUT-TIMER
+		// -----------------------------
 
 function startTimer() {
     remaining = 600;
@@ -277,14 +292,17 @@ function startTimer() {
     }, 1000);
 }
 
-// Alle Zwischensummen aller Preis-Seiten speichern
+		// -----------------------------
+		// Alle Zwischensummen aller Preis-Seiten speichern
+		// -----------------------------
+
 let angebotSummen = JSON.parse(localStorage.getItem("angebotSummen") || "{}");
 
 function saveSeitenSumme(seitenId, summe) {
   angebotSummen[seitenId] = summe;
   localStorage.setItem("angebotSummen", JSON.stringify(angebotSummen));
 
-  // NEU: Rabatt-Anzeigen automatisch nachziehen
+// NEU: Rabatt-Anzeigen automatisch nachziehen
   refreshRabattDisplays();
 }
 
@@ -296,7 +314,10 @@ function getGesamtAngebotssumme() {
     return total;
 }
 
-// ===== SHK-Rabatt (15%) =====
+		// -----------------------------
+		// SHK-Rabatt (15%)
+		// -----------------------------
+
 const SHK_RABATT = 0.15;
 
 function formatEuro(n) {
@@ -314,18 +335,20 @@ function refreshRabattDisplays() {
   const total = getGesamtAngebotssumme();
   const after = getRabattSumme(total);
 
-  // alle dynamischen Seiten (14, 8, 18, ...) -> wir hängen data-rabatt="angebot" dran
+// alle dynamischen Seiten (14, 8, 18, ...) -> wir hängen data-rabatt="angebot" dran
   document.querySelectorAll('[data-rabatt="angebot"]').forEach(el => {
     el.innerText = `Gesamtsumme abzgl. SHK-Rabatt (15%): ${formatEuro(after)}`;
   });
 
-  // Seite 40 (statisch in HTML)
+// Seite 40 (statisch in HTML)
   const p40 = document.getElementById("angebotspreisRabatt");
   if (p40) p40.innerText = `Gesamtpreis abzgl. SHK-Rabatt (15%): ${formatEuro(after)}`;
 }
 
+		// -----------------------------
+		// Funktion zur Prüfung der Pflichteingaben auf Seite 5 (Kopfdaten für Anfrage) + speichern
+		// -----------------------------
 
-// Funktion zur Prüfung der Pflichteingaben auf Seite 5
 function submitPage5() {
     const fields = [
         {id: "pj-contact", name: "Ansprechpartner bei PJ"},
@@ -358,9 +381,22 @@ function submitPage5() {
     
     showPage("page-4");
 }
-/* ===================================
-   SEITE 14 – CSV LADEN + SPEICHERN
-=================================== */
+
+function savePage5Data() {
+    const ids = [
+        "pj-contact", "pj-number", "shk-name", "shk-contact",
+        "shk-email", "shk-phone", "site-address", "execution-date"
+    ];
+
+    const obj = {};
+    ids.forEach(id => obj[id] = (document.getElementById(id)?.value || "").trim());
+
+    localStorage.setItem("page5Data", JSON.stringify(obj));
+}
+
+		// -----------------------------
+		// SEITE 14 – Tackersystem Hausmarke (ndf1.csv)
+		// -----------------------------
 
 let page14Loaded = false;
 
@@ -503,9 +539,10 @@ function berechneGesamt14() {
     }
 }
 
-// -----------------------------
-// SEITE 14.3 – ROTH (ndf3.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 14.3 – Tackersystem ROTH (ndf3.csv)
+		// -----------------------------
+
 function loadPage143() {
 
   const container = document.getElementById("content-14-3");
@@ -601,54 +638,51 @@ if (!headerInserted) {
     });
 }
 
-
 // Berechnung einzelner Zeilen
-function calcRow143(input, preisWert, index) {
+	function calcRow143(input, preisWert, index) {
 
-  const row = input.parentElement;
-  const ergebnis = row.querySelector(".col-e");
+  	const row = input.parentElement;
+  	const ergebnis = row.querySelector(".col-e");
 
-  const menge = parseFloat(input.value.replace(",", ".")) || 0;
+  	const menge = parseFloat(input.value.replace(",", ".")) || 0;
 
-  const sum = menge * preisWert;
+  	const sum = menge * preisWert;
 
-  ergebnis.innerText =
-    sum.toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
+  	ergebnis.innerText =
+    	sum.toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
 
- let gespeicherteWerte =
-    JSON.parse(localStorage.getItem("page143Data") || "{}");
+ 	let gespeicherteWerte =
+    		JSON.parse(localStorage.getItem("page143Data") || "{}");
 
 gespeicherteWerte[index] = menge;
 
 localStorage.setItem("page143Data",
     JSON.stringify(gespeicherteWerte));
 
-
   berechneGesamt143();
 }
 
+// Berechnung Gesamtsumme
+ 	function berechneGesamt143() {
 
-// Gesamtsumme
-function berechneGesamt143() {
+  	let sum = 0;
 
-  let sum = 0;
+  	document.querySelectorAll("#page-14-3 .col-e").forEach(el => {
 
-  document.querySelectorAll("#page-14-3 .col-e").forEach(el => {
-
-    const wert = parseFloat(
-      el.innerText.replace("€","")
+    	const wert = parseFloat(
+      		el.innerText.replace("€","")
                  .replace(/\./g,"")
                  .replace(",",".")
                  .trim()
-    ) || 0;
+    	) || 0;
 
-    sum += wert;
-  });
+    	sum += wert;
+  	});
 
-    // Zwischensumme für Seite 14.3 speichern
+// Zwischensumme für Seite 14.3 speichern
     saveSeitenSumme("page-14-3", sum);
 
-    // Gesamtsumme über alle Seiten
+// Gesamtsumme über alle Seiten
     const gesamtDiv = document.getElementById("gesamtSumme143");
     if (gesamtDiv) {
         gesamtDiv.innerText =
@@ -656,17 +690,9 @@ function berechneGesamt143() {
     }
 }
 
-function savePage5Data() {
-    const ids = [
-        "pj-contact", "pj-number", "shk-name", "shk-contact",
-        "shk-email", "shk-phone", "site-address", "execution-date"
-    ];
-
-    const obj = {};
-    ids.forEach(id => obj[id] = (document.getElementById(id)?.value || "").trim());
-
-    localStorage.setItem("page5Data", JSON.stringify(obj));
-}
+		// -----------------------------
+		// SEITE 40 – Ausgabeseite Kostenvoranschlag / Anfrage
+		// -----------------------------
 
 async function loadPage40() {
 
@@ -677,11 +703,11 @@ async function loadPage40() {
     }
 
 // Anfrage-Daten anzeigen (nur wenn angebotTyp === "anfrage")
-const anfrageBox = document.getElementById("anfrage-daten");
-const anfrageContent = document.getElementById("anfrage-daten-content");
+	const anfrageBox = document.getElementById("anfrage-daten");
+	const anfrageContent = document.getElementById("anfrage-daten-content");
 
-if (angebotTyp === "anfrage") {
-    const p5 = JSON.parse(localStorage.getItem("page5Data") || "{}");
+	if (angebotTyp === "anfrage") {
+    		const p5 = JSON.parse(localStorage.getItem("page5Data") || "{}");
 
     const labels = {
         "pj-contact": "Ansprechpartner bei PJ",
@@ -729,7 +755,6 @@ container.innerHTML += `
 `;
 
     let gesamt = 0;
-
 
     const seitenConfig = [
         { key: "page14Data",  csv: "ndf1.csv" },
@@ -800,11 +825,11 @@ container.innerHTML += `
         });
     }
 
-const fraesenHinweis = document.getElementById("fraesen-hinweis-print");
-if (fraesenHinweis) {
-  fraesenHinweis.style.display = fraesenVerwendet ? "block" : "none";
-}
-
+// Hinweise Frässystem
+	const fraesenHinweis = document.getElementById("fraesen-hinweis-print");
+	if (fraesenHinweis) {
+ 	 fraesenHinweis.style.display = fraesenVerwendet ? "block" : "none";
+	}
 
     const angebotspreisEl = document.getElementById("angebotspreis");
     if (angebotspreisEl) {
@@ -814,7 +839,7 @@ if (fraesenHinweis) {
 
 refreshRabattDisplays();
 
-    // Hinweise laden (ndf4.csv)
+// Hinweise laden (ndf4.csv)
     try {
         const hinweisRes = await fetch("ndf4.csv");
         const hinweisText = await hinweisRes.text();
@@ -841,6 +866,10 @@ refreshRabattDisplays();
     }
 }
 
+		// -----------------------------
+		// direktZumAngebot (Button)
+		// -----------------------------
+
 function direktZumAngebot() {
 
     const fields = [
@@ -863,9 +892,17 @@ function direktZumAngebot() {
     }
 }
 
+		// -----------------------------
+		// SEITE 40 – printPage - (Button "Drucken / als PDF speichern")
+		// -----------------------------
+
 function printPage40() {
   window.print();
 }
+
+		// -----------------------------
+		// SEITE 40 – sendMail - (Button "Als Text-Mail versenden")
+		// -----------------------------
 
 function sendMailPage40() {
 
@@ -888,15 +925,19 @@ function sendMailPage40() {
         `mailto:${mailAdresse}?subject=${encodeURIComponent(subject)}&body=${body}`;
 }
 
+		// -----------------------------
+		// clearInputs - Button "Eingaben löschen"
+		// -----------------------------
+
 function clearInputs() {
 
-    // localStorage komplett löschen
+// localStorage komplett löschen
     localStorage.clear();
 
-    // Eingabefelder im DOM leeren
+// Eingabefelder im DOM leeren
     document.querySelectorAll("input").forEach(inp => inp.value = "");
 
-    // Dynamische Inhalte leeren (damit nichts „stehen bleibt“)
+// Dynamische Inhalte leeren (damit nichts „stehen bleibt“)
     const idsToClear = [
         "page14-content",
         "content-14-3",
@@ -926,7 +967,7 @@ function clearInputs() {
         if (el) el.innerHTML = "";
     });
 
-    // Summen-Anzeige zurücksetzen
+// Summen-Anzeige zurücksetzen
     const angebotspreis = document.getElementById("angebotspreis");
     if (angebotspreis) angebotspreis.innerText = "Gesamtsumme: 0,00 €";
 
@@ -990,11 +1031,12 @@ function clearInputs() {
     const sum13 = document.getElementById("gesamtSumme13");
     if (sum13) sum13.innerText = "Gesamtsumme Angebot: 0,00 €";
 
-    // Flags zurücksetzen, damit Seiten neu aus CSV geladen werden
+// Flags zurücksetzen, damit Seiten neu aus CSV geladen werden
     page14Loaded = false;
-    // Seite 14.3 hat kein Flag, daher reicht Container leeren
 
-    // Angebots-Summen Objekt zurücksetzen (falls du es im RAM nutzt)
+// Seite 14.3 hat kein Flag, daher reicht Container leeren
+
+// Angebots-Summen Objekt zurücksetzen (falls du es im RAM nutzt)
     angebotSummen = {};
 
     currentUser = null;
@@ -1003,16 +1045,18 @@ function clearInputs() {
 document.querySelectorAll('[data-rabatt="angebot"]').forEach(el => {
   el.innerText = "Gesamtsumme abzgl. SHK-Rabatt (15%): 0,00 €";
 });
+
 const p40r = document.getElementById("angebotspreisRabatt");
 if (p40r) p40r.innerText = "Gesamtpreis abzgl. SHK-Rabatt (15%): 0,00 €";
 
-
-    // zurück
+// zurück zu "page-3"
     showPage("page-3");
 }
-// -----------------------------
-// SEITE 14.2 – UPONOR (ndf5.csv)
-// -----------------------------
+
+		// -----------------------------
+		// SEITE 14.2 – Tackersystem UPONOR (ndf5.csv)
+		// -----------------------------
+
 function loadPage142() {
 
     const container = document.getElementById("content-14-2");
@@ -1026,7 +1070,7 @@ function loadPage142() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page142Data") || "{}");
@@ -1070,7 +1114,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1108,6 +1151,7 @@ if (!headerInserted) {
             berechneGesamt142();
         });
 }
+
 function calcRow142(input, preis, index) {
 
     const row = input.parentElement;
@@ -1149,9 +1193,11 @@ function berechneGesamt142() {
             getGesamtAngebotssumme().toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
     }
 }
-// -----------------------------
-// SEITE 8 – Fräsen (ndf6.csv)
-// -----------------------------
+
+		// -----------------------------
+		// SEITE 8 – Fräsen (ndf6.csv)
+		// -----------------------------
+
 function loadPage8() {
 
     const container = document.getElementById("content-8");
@@ -1165,7 +1211,7 @@ function loadPage8() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+ 		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page8Data") || "{}");
@@ -1279,7 +1325,6 @@ function setupFraesenHinweis() {
 
 setupFraesenHinweis();
 
-
 function calcRow8(input, preis, index) {
 
     const row = input.parentElement;
@@ -1298,6 +1343,7 @@ function calcRow8(input, preis, index) {
 
     berechneGesamt8();
 }
+
 function berechneGesamt8() {
 
     let sum = 0;
@@ -1321,9 +1367,11 @@ function berechneGesamt8() {
             getGesamtAngebotssumme().toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
     }
 }
-// -----------------------------
-// SEITE 18 – Unterdämmung (ndf7.csv)
-// -----------------------------
+
+		// -----------------------------
+		// SEITE 18 – Unterdämmung (ndf7.csv)
+		// -----------------------------
+
 function loadPage18() {
 
     const container = document.getElementById("content-18");
@@ -1337,7 +1385,7 @@ function loadPage18() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page18Data") || "{}");
@@ -1381,7 +1429,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1419,6 +1466,7 @@ if (!headerInserted) {
             berechneGesamt18();
         });
 }
+
 function calcRow18(input, preis, index) {
 
     const row = input.parentElement;
@@ -1437,6 +1485,7 @@ function calcRow18(input, preis, index) {
 
     berechneGesamt18();
 }
+
 function berechneGesamt18() {
 
     let sum = 0;
@@ -1461,9 +1510,10 @@ function berechneGesamt18() {
     }
 }
 
-// -----------------------------
-// SEITE 20 – Verteiler & Regeltechnik (ndf8.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 20 – Verteiler & Regeltechnik (ndf8.csv)
+		// -----------------------------
+
 function loadPage20() {
 
     const container = document.getElementById("content-20");
@@ -1477,7 +1527,7 @@ function loadPage20() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page20Data") || "{}");
@@ -1521,7 +1571,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1559,6 +1608,7 @@ if (!headerInserted) {
             berechneGesamt20();
         });
 }
+
 function calcRow20(input, preis, index) {
 
     const row = input.parentElement;
@@ -1577,6 +1627,7 @@ function calcRow20(input, preis, index) {
 
     berechneGesamt20();
 }
+
 function berechneGesamt20() {
 
     let sum = 0;
@@ -1601,9 +1652,10 @@ function berechneGesamt20() {
     }
 }
 
-// -----------------------------
-// SEITE 21 – Dienstleistungen (ndf9.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 21 – Dienstleistungen (ndf9.csv)
+		// -----------------------------
+
 function loadPage21() {
 
     const container = document.getElementById("content-21");
@@ -1617,7 +1669,7 @@ function loadPage21() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page21Data") || "{}");
@@ -1661,7 +1713,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1699,6 +1750,7 @@ if (!headerInserted) {
             berechneGesamt21();
         });
 }
+
 function calcRow21(input, preis, index) {
 
     const row = input.parentElement;
@@ -1717,6 +1769,7 @@ function calcRow21(input, preis, index) {
 
     berechneGesamt21();
 }
+
 function berechneGesamt21() {
 
     let sum = 0;
@@ -1741,9 +1794,10 @@ function berechneGesamt21() {
     }
 }
 
-// -----------------------------
-// SEITE 22 – Zuschläge (ndf10.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 22 – Zuschläge (ndf10.csv)
+		// -----------------------------
+
 function loadPage22() {
 
     const container = document.getElementById("content-22");
@@ -1757,7 +1811,7 @@ function loadPage22() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page22Data") || "{}");
@@ -1801,7 +1855,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1839,6 +1892,7 @@ if (!headerInserted) {
             berechneGesamt22();
         });
 }
+
 function calcRow22(input, preis, index) {
 
     const row = input.parentElement;
@@ -1857,6 +1911,7 @@ function calcRow22(input, preis, index) {
 
     berechneGesamt22();
 }
+
 function berechneGesamt22() {
 
     let sum = 0;
@@ -1880,9 +1935,11 @@ function berechneGesamt22() {
             getGesamtAngebotssumme().toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
     }
 }
-// -----------------------------
-// SEITE 9 – Estrich (ndf11.csv)
-// -----------------------------
+
+		// -----------------------------
+		// SEITE 9 – Estrich (ndf11.csv)
+		// -----------------------------
+
 function loadPage9() {
 
     const container = document.getElementById("content-9");
@@ -1896,7 +1953,7 @@ function loadPage9() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page9Data") || "{}");
@@ -1940,7 +1997,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -1978,6 +2034,7 @@ if (!headerInserted) {
             berechneGesamt9();
         });
 }
+
 function calcRow9(input, preis, index) {
 
     const row = input.parentElement;
@@ -1996,6 +2053,7 @@ function calcRow9(input, preis, index) {
 
     berechneGesamt9();
 }
+
 function berechneGesamt9() {
 
     let sum = 0;
@@ -2020,9 +2078,10 @@ function berechneGesamt9() {
     }
 }
 
-// -----------------------------
-// SEITE 10 – Klett3mm (ndf2.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 10 – Klett3mm (ndf2.csv)
+		// -----------------------------
+
 function loadPage10() {
 
     const container = document.getElementById("content-10");
@@ -2036,7 +2095,7 @@ function loadPage10() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page10Data") || "{}");
@@ -2080,7 +2139,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -2118,6 +2176,7 @@ if (!headerInserted) {
             berechneGesamt10();
         });
 }
+
 function calcRow10(input, preis, index) {
 
     const row = input.parentElement;
@@ -2136,6 +2195,7 @@ function calcRow10(input, preis, index) {
 
     berechneGesamt10();
 }
+
 function berechneGesamt10() {
 
     let sum = 0;
@@ -2160,9 +2220,10 @@ function berechneGesamt10() {
     }
 }
 
-// -----------------------------
-// SEITE 23 – Aufbau 50mm (ndf12.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 23 – Aufbau 50mm (ndf12.csv)
+		// -----------------------------
+
 function loadPage23() {
 
     const container = document.getElementById("content-23");
@@ -2176,7 +2237,7 @@ function loadPage23() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page23Data") || "{}");
@@ -2258,6 +2319,7 @@ if (!headerInserted) {
             berechneGesamt23();
         });
 }
+
 function calcRow23(input, preis, index) {
 
     const row = input.parentElement;
@@ -2276,6 +2338,7 @@ function calcRow23(input, preis, index) {
 
     berechneGesamt23();
 }
+
 function berechneGesamt23() {
 
     let sum = 0;
@@ -2300,9 +2363,10 @@ function berechneGesamt23() {
     }
 }
 
-// -----------------------------
-// SEITE 24 – Aufbau 20/30mm + 3mm Deckschicht (ndf13.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 24 – Aufbau 20/30mm + 3mm Deckschicht (ndf13.csv)
+		// -----------------------------
+
 function loadPage24() {
 
     const container = document.getElementById("content-24");
@@ -2316,7 +2380,7 @@ function loadPage24() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page24Data") || "{}");
@@ -2398,6 +2462,7 @@ if (!headerInserted) {
             berechneGesamt24();
         });
 }
+
 function calcRow24(input, preis, index) {
 
     const row = input.parentElement;
@@ -2416,6 +2481,7 @@ function calcRow24(input, preis, index) {
 
     berechneGesamt24();
 }
+
 function berechneGesamt24() {
 
     let sum = 0;
@@ -2440,9 +2506,10 @@ function berechneGesamt24() {
     }
 }
 
-// -----------------------------
-// SEITE 25 – Aufbau 25mm (XPS) (ndf14.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 25 – Aufbau 25mm (XPS) (ndf14.csv)
+		// -----------------------------
+
 function loadPage25() {
 
     const container = document.getElementById("content-25");
@@ -2456,7 +2523,7 @@ function loadPage25() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page25Data") || "{}");
@@ -2538,6 +2605,7 @@ if (!headerInserted) {
             berechneGesamt25();
         });
 }
+
 function calcRow25(input, preis, index) {
 
     const row = input.parentElement;
@@ -2556,6 +2624,7 @@ function calcRow25(input, preis, index) {
 
     berechneGesamt25();
 }
+
 function berechneGesamt25() {
 
     let sum = 0;
@@ -2580,9 +2649,10 @@ function berechneGesamt25() {
     }
 }
 
-// -----------------------------
-// SEITE 27 – Klettsystem Handelsmarke (ndf15.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 27 – Klettsystem Handelsmarke (ndf15.csv)
+		// -----------------------------
+
 function loadPage27() {
 
     const container = document.getElementById("content-27");
@@ -2640,7 +2710,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -2678,6 +2747,7 @@ if (!headerInserted) {
             berechneGesamt27();
         });
 }
+
 function calcRow27(input, preis, index) {
 
     const row = input.parentElement;
@@ -2696,6 +2766,7 @@ function calcRow27(input, preis, index) {
 
     berechneGesamt27();
 }
+
 function berechneGesamt27() {
 
     let sum = 0;
@@ -2720,9 +2791,10 @@ function berechneGesamt27() {
     }
 }
 
-// -----------------------------
-// SEITE 28 – Klettsystem Uponor (ndf16.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 28 – Klettsystem Uponor (ndf16.csv)
+		// -----------------------------
+
 function loadPage28() {
 
     const container = document.getElementById("content-28");
@@ -2736,7 +2808,7 @@ function loadPage28() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page28Data") || "{}");
@@ -2780,7 +2852,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -2818,6 +2889,7 @@ if (!headerInserted) {
             berechneGesamt28();
         });
 }
+
 function calcRow28(input, preis, index) {
 
     const row = input.parentElement;
@@ -2836,6 +2908,7 @@ function calcRow28(input, preis, index) {
 
     berechneGesamt28();
 }
+
 function berechneGesamt28() {
 
     let sum = 0;
@@ -2860,9 +2933,10 @@ function berechneGesamt28() {
     }
 }
 
-// -----------------------------
-// SEITE 30 – Noppensystem Handelsmarke (ndf17.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 30 – Noppensystem Handelsmarke (ndf17.csv)
+		// -----------------------------
+
 function loadPage30() {
 
     const container = document.getElementById("content-30");
@@ -2876,7 +2950,7 @@ function loadPage30() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page30Data") || "{}");
@@ -2920,7 +2994,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -2958,6 +3031,7 @@ if (!headerInserted) {
             berechneGesamt30();
         });
 }
+
 function calcRow30(input, preis, index) {
 
     const row = input.parentElement;
@@ -2976,6 +3050,7 @@ function calcRow30(input, preis, index) {
 
     berechneGesamt30();
 }
+
 function berechneGesamt30() {
 
     let sum = 0;
@@ -3000,9 +3075,10 @@ function berechneGesamt30() {
     }
 }
 
-// -----------------------------
-// SEITE 31 – Noppensystem Uponor (ndf18.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 31 – Noppensystem Uponor (ndf18.csv)
+		// -----------------------------
+
 function loadPage31() {
 
     const container = document.getElementById("content-31");
@@ -3016,7 +3092,7 @@ function loadPage31() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page31Data") || "{}");
@@ -3060,7 +3136,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -3098,6 +3173,7 @@ if (!headerInserted) {
             berechneGesamt31();
         });
 }
+
 function calcRow31(input, preis, index) {
 
     const row = input.parentElement;
@@ -3116,6 +3192,7 @@ function calcRow31(input, preis, index) {
 
     berechneGesamt31();
 }
+
 function berechneGesamt31() {
 
     let sum = 0;
@@ -3140,9 +3217,10 @@ function berechneGesamt31() {
     }
 }
 
-// -----------------------------
-// SEITE 32 – Noppensystem Roth (ndf19.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 32 – Noppensystem Roth (ndf19.csv)
+		// -----------------------------
+
 function loadPage32() {
 
     const container = document.getElementById("content-32");
@@ -3156,7 +3234,7 @@ function loadPage32() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page32Data") || "{}");
@@ -3200,7 +3278,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -3238,6 +3315,7 @@ if (!headerInserted) {
             berechneGesamt32();
         });
 }
+
 function calcRow32(input, preis, index) {
 
     const row = input.parentElement;
@@ -3256,6 +3334,7 @@ function calcRow32(input, preis, index) {
 
     berechneGesamt32();
 }
+
 function berechneGesamt32() {
 
     let sum = 0;
@@ -3280,9 +3359,10 @@ function berechneGesamt32() {
     }
 }
 
-// -----------------------------
-// SEITE 33 – Industrieboden (ndf20.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 33 – Industrieboden (ndf20.csv)
+		// -----------------------------
+
 function loadPage33() {
 
     const container = document.getElementById("content-33");
@@ -3296,7 +3376,7 @@ function loadPage33() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
 
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page33Data") || "{}");
@@ -3340,7 +3420,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -3378,6 +3457,7 @@ if (!headerInserted) {
             berechneGesamt33();
         });
 }
+
 function calcRow33(input, preis, index) {
 
     const row = input.parentElement;
@@ -3396,6 +3476,7 @@ function calcRow33(input, preis, index) {
 
     berechneGesamt33();
 }
+
 function berechneGesamt33() {
 
     let sum = 0;
@@ -3420,9 +3501,10 @@ function berechneGesamt33() {
     }
 }
 
-// -----------------------------
-// SEITE 13 – Industrieboden (ndf21.csv)
-// -----------------------------
+		// -----------------------------
+		// SEITE 13 – Industrieboden (ndf21.csv)
+		// -----------------------------
+
 function loadPage13() {
 
     const container = document.getElementById("content-13");
@@ -3436,7 +3518,7 @@ function loadPage13() {
 
             const lines = data.split("\n").slice(1);
             let html = "";
-let headerInserted = false;
+		let headerInserted = false;
             const gespeicherteWerte =
                 JSON.parse(localStorage.getItem("page13Data") || "{}");
 
@@ -3479,7 +3561,6 @@ if (!headerInserted) {
         headerInserted = true;
 }
 
-
                     const menge = gespeicherteWerte[index] || 0;
 
                     html += `
@@ -3517,6 +3598,7 @@ if (!headerInserted) {
             berechneGesamt13();
         });
 }
+
 function calcRow13(input, preis, index) {
 
     const row = input.parentElement;
@@ -3535,6 +3617,7 @@ function calcRow13(input, preis, index) {
 
     berechneGesamt13();
 }
+
 function berechneGesamt13() {
 
     let sum = 0;
@@ -3559,27 +3642,34 @@ function berechneGesamt13() {
     }
 }
 
-function setupAutoClearZeroInputs() {
-  document.addEventListener("focusin", (e) => {
-    const el = e.target;
-    if (el && el.classList && el.classList.contains("menge-input")) {
-      if (el.value === "0") el.value = "";
-    }
-  });
+		// -----------------------------
+		// Eingabefelder - 0 entfernen bei Eingabe
+		// -----------------------------
 
-  // Optional: falls man mit Wheel/Arrow Keys aus Versehen wieder 0 reinbekommt
-  document.addEventListener("input", (e) => {
-    const el = e.target;
-    if (el && el.classList && el.classList.contains("menge-input")) {
-      if (el.value === "0") {
-        // wenn wirklich 0 eingegeben wurde, lassen wir es drin
-        // -> daher NICHT löschen, außer du willst NIE 0 erlauben
-      }
-    }
-  });
-}
+     function setupAutoClearZeroInputs() {
+       document.addEventListener("focusin", (e) => {
+         const el = e.target;
+         if (el && el.classList && el.classList.contains("menge-input")) {
+           if (el.value === "0") el.value = "";
+         }
+       });
 
-setupAutoClearZeroInputs();
+// Optional: falls man mit Wheel/Arrow Keys aus Versehen wieder 0 reinbekommt
+      document.addEventListener("input", (e) => {
+        const el = e.target;
+        if (el && el.classList && el.classList.contains("menge-input")) {
+          if (el.value === "0") {
+// wenn wirklich 0 eingegeben wurde, lassen wir es drin -> daher NICHT löschen
+          }
+        }
+      });
+    }
+
+    setupAutoClearZeroInputs();
+
+		// -----------------------------
+		// Spaltenüberschriften
+		// -----------------------------
 
 function renderTableHeader() {
   return `
@@ -3594,12 +3684,16 @@ function renderTableHeader() {
   `;
 }
 
+		// -----------------------------
+		// Blob - Button - PDF download / teilen 
+		// -----------------------------
+
 async function sharePdf() {
-  // ---- Mobile-Fix: html2canvas rendert sonst gerne "aus der Mitte" ----
+// ---- Mobile-Fix: html2canvas rendert sonst gerne "aus der Mitte" ----
   const oldScrollX = window.scrollX || 0;
   const oldScrollY = window.scrollY || 0;
 
-  // Seite nach ganz oben, damit Canvas sauber rendert
+// Seite nach ganz oben, damit Canvas sauber rendert
   window.scrollTo(0, 0);
   await new Promise(r => requestAnimationFrame(r));
 
@@ -3612,10 +3706,10 @@ async function sharePdf() {
 
   const el = document.getElementById("page-40");
 
-  // Warten bis Seite 40 komplett aufgebaut ist (wichtig fürs Smartphone!)
+// Warten bis Seite 40 komplett aufgebaut ist (wichtig fürs Smartphone!)
   if (typeof page40Promise !== "undefined" && page40Promise) {
     await page40Promise;
-    // kurzer Render-Puffer
+// kurzer Render-Puffer
     await new Promise(r => setTimeout(r, 150));
   }
 
@@ -3633,7 +3727,7 @@ async function sharePdf() {
 
   document.body.classList.add("pdf-mode");
 
-  // Logo nur fürs PDF in Seite 40 klonen
+// Logo nur fürs PDF in Seite 40 klonen
   let tempLogo = null;
   const existingLogo = document.querySelector("img.logo");
   if (existingLogo) {
@@ -3644,7 +3738,7 @@ async function sharePdf() {
 
   await new Promise(r => requestAnimationFrame(r));
 
-  // Desktop-Erkennung: hier KEIN navigator.share() verwenden
+// Desktop-Erkennung: hier KEIN navigator.share() verwenden
   const isMobile =
     /Android|iPhone|iPad|iPod/i.test(navigator.userAgent) ||
     (navigator.maxTouchPoints > 1 && window.matchMedia("(max-width: 1024px)").matches);
@@ -3673,7 +3767,7 @@ async function sharePdf() {
     const blob = pdf.output("blob");
     const file = new File([blob], filename, { type: "application/pdf" });
 
-    // 1) NUR AUF MOBILE teilen versuchen (damit auf Windows nicht dieses Share-Fenster aufgeht)
+ // 1) NUR AUF MOBILE teilen versuchen (damit auf Windows nicht dieses Share-Fenster aufgeht)
     if (isMobile && navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
       try {
         await navigator.share({ title: filename, text: "PDF", files: [file] });
@@ -3684,13 +3778,13 @@ async function sharePdf() {
       }
     }
 
-    // 2) Fallback: Öffnen + Download (Desktop immer, Mobile wenn Share nicht geht)
+ // 2) Fallback: Öffnen + Download (Desktop immer, Mobile wenn Share nicht geht)
     const url = URL.createObjectURL(blob);
 
-    // Öffnen ist oft der bequemste Weg, um danach in Outlook/WhatsApp manuell anzuhängen
+ // Öffnen ist oft der bequemste Weg, um danach in Outlook/WhatsApp manuell anzuhängen
     window.open(url, "_blank", "noopener");
 
-    // Download als verlässlicher Pfad (vor allem für Outlook)
+ // Download als verlässlicher Pfad (vor allem für Outlook)
     const a = document.createElement("a");
     a.href = url;
     a.download = filename;
@@ -3712,16 +3806,25 @@ async function sharePdf() {
 
 window.sharePdf = sharePdf;
 
+		// -----------------------------
+		// showLoader40 - EIERUHR 
+		// -----------------------------
+
 function showLoader40(show) {
   const l = document.getElementById("loader40");
   if (!l) return;
   l.classList.toggle("hidden", !show);
 }
 
+		// -----------------------------
+
 document.body.addEventListener("mousemove", () => remaining = 600);
 document.body.addEventListener("keydown", () => remaining = 600);
+		
+		// -----------------------------
+		// Funktionen für HTML global verfügbar machen
+		// -----------------------------
 
-// ===== Funktionen für HTML global verfügbar machen =====
 window.login = login;
 window.forgotPassword = forgotPassword;
 window.savePassword = savePassword;
@@ -3799,36 +3902,3 @@ window.berechneGesamt33 = berechneGesamt33;
 window.loadPage13 = loadPage13;
 window.calcRow13 = calcRow13;
 window.berechneGesamt13 = berechneGesamt13;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
