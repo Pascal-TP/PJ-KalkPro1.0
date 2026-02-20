@@ -20,9 +20,38 @@
 <div id="user-actions" class="hidden">
   <select id="user-action-select" onchange="handleUserAction(this.value)">
     <option value="">Aktion auswählen…</option>
+
+    <option value="nav:page-3">➡️ Auswahl KV/Anfrage</option>
+
+    <optgroup label="Neubau">
+    <option value="nav:page-7">➡️ Hauptmenü Neubau</option>
+    <option value="nav:page-14-1">Tackersystem</option>
+    <option value="nav:page-26">Klettsystem</option>
+    <option value="nav:page-29">Noppensystem</option>
+    <option value="nav:page-33">Industrieboden</option>
+    </optgroup>
+
+    <optgroup label="Sanierung">
+    <option value="nav:page-6">➡️ Hauptmenü Sanierung</option>
+    <option value="nav:page-8">Frässystem</option>
+    <option value="nav:page-10">3mm Klett</option>
+    <option value="nav:page-11">Trockenbausystem</option>
+    </optgroup>
+
+    <optgroup label="Estrich + Unterdämmung">
+    <option value="nav:page-9">Estrich</option>
+    <option value="nav:page-18">Unterdämmung</option>
+    </optgroup>
+    
+    <option value="nav:page-20">➡️ Verteiler & Regeltechnik</option>
+    <option value="nav:page-21">➡️ Dienstleistung</option>
+    <option value="nav:page-22">➡️ Zuschläge</option>
+
+    <optgroup label="Aktionen">
     <option value="clear">Eingaben löschen</option>
     <option value="changePw">Passwort ändern</option>
     <option value="logout">Abmelden</option>
+    </optgroup>
   </select>
 </div>
 

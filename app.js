@@ -59,6 +59,16 @@ resetStoredInputsOnReload();
 function handleUserAction(val) {
   if (!val) return;
 
+// ✅ Navigationseinträge
+  if (val.startsWith("nav:")) {
+    const pageId = val.replace("nav:", "");
+    showPage(pageId);
+    const sel = document.getElementById("user-action-select");
+    if (sel) sel.value = "";
+    return;
+  }
+
+  // bestehende Aktionen
   if (val === "changePw") goToChange();
   if (val === "clear") {
     const ok = confirm("Alle Eingaben wirklich löschen?");
@@ -73,11 +83,9 @@ function handleUserAction(val) {
 window.handleUserAction = handleUserAction;
 
 
-
-
-		// -----------------------------
-		// Firebase - E-Mail+Passwort
-		// -----------------------------
+// -----------------------------
+// Firebase - E-Mail+Passwort
+// -----------------------------
 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {
