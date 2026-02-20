@@ -21,6 +21,12 @@
   <select id="user-action-select" onchange="handleUserAction(this.value)">
     <option value="">Aktion auswählen…</option>
 
+    <optgroup label="Aktionen">
+    <option value="clear">Eingaben löschen</option>
+    <option value="changePw">Passwort ändern</option>
+    <option value="logout">Abmelden</option>
+    </optgroup>
+
     <option value="nav:page-3">➡️ Auswahl KV/Anfrage</option>
 
     <optgroup label="Neubau">
@@ -47,11 +53,7 @@
     <option value="nav:page-21">➡️ Dienstleistung</option>
     <option value="nav:page-22">➡️ Zuschläge</option>
 
-    <optgroup label="Aktionen">
-    <option value="clear">Eingaben löschen</option>
-    <option value="changePw">Passwort ändern</option>
-    <option value="logout">Abmelden</option>
-    </optgroup>
+    
   </select>
 </div>
 
