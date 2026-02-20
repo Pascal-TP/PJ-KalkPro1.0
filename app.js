@@ -121,23 +121,33 @@ const auth = getAuth(fbApp);
   // 3) Listener erst DANACH
   onAuthStateChanged(auth, user => {
   const info = document.getElementById("login-info");
-  const actions = document.getElementById("user-actions");
 
   if (user) {
     if (info) info.innerText = "Angemeldet als: " + user.email;
-    actions?.classList.remove("hidden");
+    updateAdminUI_();
 
-    const target = getInitialPage() || "page-3";
+    // Zielseite bestimmen: letzte Seite (aber nie login) – ansonsten Seite 3
+    const last = sessionStorage.getItem("lastPage");
+    const target = getInitialPage();
+
     showPage(target);
 
   } else {
     if (info) info.innerText = "";
-    actions?.classList.add("hidden");
-
-    // 👉 Startseite anzeigen + Timer starten
-    showPage("page-start", true);
-    startSplashScreen();
+    updateAdminUI_();
+    showPage("page-login");
   }
+
+const actions = document.getElementById("user-actions");
+
+if (user) {
+  if (actions) actions.classList.remove("hidden");
+} else {
+  if (actions) actions.classList.add("hidden");
+}
+
+ // 🔥 ERST JETZT App sichtbar machen
+  if (app) app.classList.remove("hidden");
 });
 })();
 
