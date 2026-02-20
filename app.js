@@ -7,6 +7,16 @@ let page40Promise = null;
 
 
 // -----------------------------
+// Startbild wechselt nach 3 Sekunden
+// -----------------------------
+
+function startSplashScreen() {
+  setTimeout(() => {
+    showPage("page-login");
+  }, 3000);
+}
+
+// -----------------------------
 // Bei Reload (F5) Eingabefelder auf 0 setzen
 // -----------------------------
 
@@ -111,33 +121,23 @@ const auth = getAuth(fbApp);
   // 3) Listener erst DANACH
   onAuthStateChanged(auth, user => {
   const info = document.getElementById("login-info");
+  const actions = document.getElementById("user-actions");
 
   if (user) {
     if (info) info.innerText = "Angemeldet als: " + user.email;
-    updateAdminUI_();
+    actions?.classList.remove("hidden");
 
-    // Zielseite bestimmen: letzte Seite (aber nie login) – ansonsten Seite 3
-    const last = sessionStorage.getItem("lastPage");
-    const target = getInitialPage();
-
+    const target = getInitialPage() || "page-3";
     showPage(target);
 
   } else {
     if (info) info.innerText = "";
-    updateAdminUI_();
-    showPage("page-login");
+    actions?.classList.add("hidden");
+
+    // 👉 Startseite anzeigen + Timer starten
+    showPage("page-start", true);
+    startSplashScreen();
   }
-
-const actions = document.getElementById("user-actions");
-
-if (user) {
-  if (actions) actions.classList.remove("hidden");
-} else {
-  if (actions) actions.classList.add("hidden");
-}
-
- // 🔥 ERST JETZT App sichtbar machen
-  if (app) app.classList.remove("hidden");
 });
 })();
 
