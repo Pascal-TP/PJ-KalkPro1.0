@@ -77,21 +77,19 @@
         Anfrage an NDF – Ermittlung eines Richtpreises für den Kunden, jedoch mit der Möglichkeit ein qualifiziertes Angebot von NDF per Mail anzufragen.<br>
     </p>
     <button onclick="clearInputs()">Eingaben löschen</button>
-    <button onclick="showPage('page-login')">Zurück</button>
     <button id="btnExportLog" class="hidden" onclick="exportLoginLog()">
       Login-Log herunterladen
     </button>
 
 </div>
 
-<!-- SEITE 4: HAUPTMENÜ KV -->
+<!-- SEITE 4: HAUPTMENÜ -->
 <div class="page" id="page-4">
-    <h2>Hauptmenü KV</h2>
+    <h2>Hauptmenü</h2>
 
     <button onclick="showPage('page-6')">Sanierung</button>
     <button onclick="showPage('page-7')">Neubau</button>
-    <button onclick="showPage('page-3')">Zurück</button>
-</div>
+    </div>
 
 <!-- SEITE 5: ANFRAGE AN NDF -->
 <div class="page" id="page-5">
@@ -135,8 +133,8 @@
     <div class="error" id="page5-error" style="color:darkred; margin:10px;"></div>
 
     <div class="button-bar">
-        <button onclick="submitPage5()">Weiter</button>
-        <button onclick="showPage('page-3')">Zurück</button>
+        <button onclick="submitPage5()">Eingabe und Weiter</button>
+        <button onclick="direktZumAngebot()">Eingabe und Direkt zum Angebot</button>
     </div>
 </div>
 
@@ -154,7 +152,7 @@
 
     <!-- Navigationsbuttons nebeneinander -->
     <div style="margin-top:40px;">
-        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zur Auswahl "KV oder Anfrage"</button>
         <button onclick="showPage('page-18')">Weiter</button>
     </div>
 </div>
@@ -176,7 +174,7 @@
 
     <!-- Navigationsbuttons nebeneinander -->
     <div style="margin-top:40px;">
-        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zur Auswahl "KV oder Anfrage"</button>
         
     </div>
 </div>
@@ -188,7 +186,7 @@
     <div id="page14-content" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -204,7 +202,7 @@
 
     <br><br>
 
-    <button onclick="showPage('page-7')">Zurück</button>
+    <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
 </div>
 
 <!-- SEITE 14.3: ROTH -->
@@ -213,7 +211,7 @@
        <div id="content-14-3" class="price-table"></div>
 
 <div class="button-bar">
-                <button onclick="showPage('page-7')">Zurück</button>
+                <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
                 <button onclick="showPage('page-18')">Weiter</button>
                 <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
                </div>
@@ -253,11 +251,11 @@
 
 <!-- Buttons -->
     <div class="button-bar">
-        <button onclick="showPage('page-3')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="printPage40()">Drucken / speichern als PDF</button>
         <button onclick="sendMailPage40()">Senden als Text-Mail</button>
         <button onclick="sharePdf()">PDF download</button>
-        <button onclick="clearInputs()">Eingaben löschen</button>
+        
     </div>
 </div>
 
@@ -281,7 +279,7 @@
     <div id="content-14-2" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -295,7 +293,7 @@
     <div id="content-8" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-6')">Zurück</button>
+        <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-20')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -308,7 +306,7 @@
     <div id="content-18" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-20')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -321,7 +319,7 @@
     <div id="content-20" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-18')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-21')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -334,7 +332,7 @@
     <div id="content-21" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-20')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-22')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -347,7 +345,7 @@
     <div id="content-22" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-21')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="direktZumAngebot()">Weiter</button>
     </div>
 </div>
@@ -359,7 +357,7 @@
     <div id="content-9" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -372,7 +370,7 @@
     <div id="content-10" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-4')">Zurück</button>
+        <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -391,7 +389,7 @@
 
     <!-- Navigationsbuttons nebeneinander -->
     <div style="margin-top:40px;">
-        <button onclick="showPage('page-6')">Zurück</button>
+        <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-18')">Weiter</button>
     </div>
 </div>
@@ -403,7 +401,7 @@
     <div id="content-23" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -416,7 +414,7 @@
     <div id="content-24" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -429,7 +427,7 @@
     <div id="content-25" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-11')">Zurück</button>
+        <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-20')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -443,7 +441,7 @@
     <button onclick="showPage('page-28')">Uponor</button>
     <br><br>
 
-    <button onclick="showPage('page-7')">Zurück</button>
+    <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
 </div>
 
 <!-- SEITE 29: AUSWAHL MARKE Noppensystem -->
@@ -455,7 +453,7 @@
     <button onclick="showPage('page-32')">Roth</button>
     <br><br>
 
-    <button onclick="showPage('page-7')">Zurück</button>
+    <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
 </div>
 
 <!-- SEITE 27: Klett Handelsmarke -->
@@ -465,7 +463,7 @@
     <div id="content-27" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-26')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -478,7 +476,7 @@
     <div id="content-28" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-26')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -491,7 +489,7 @@
     <div id="content-30" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -504,7 +502,7 @@
     <div id="content-31" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -517,7 +515,7 @@
     <div id="content-32" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-29')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -530,7 +528,7 @@
     <div id="content-33" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-20')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
@@ -543,7 +541,7 @@
     <div id="content-13" class="price-table"></div>
 
     <div class="button-bar">
-        <button onclick="showPage('page-7')">Zurück</button>
+        <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
         <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
     </div>
