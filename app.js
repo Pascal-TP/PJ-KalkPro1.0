@@ -135,7 +135,8 @@ const auth = getAuth(fbApp);
   } else {
     if (info) info.innerText = "";
     updateAdminUI_();
-    showPage("page-login");
+    showPage("page-start", true);
+    startSplashScreen();
   }
 
 const actions = document.getElementById("user-actions");
