@@ -78,11 +78,16 @@ button:active {
 }
 
 #login-info {
-    position: fixed;
-    top: 50px;              /* unter dem Timer */
-    right: 15px;
-    font-size: 14px;
-    text-align: right;
+  position: fixed;
+  top: 50px;
+  right: 15px;
+  font-size: 14px;
+  text-align: right;
+
+  /* NEU: kein Link-Verhalten */
+  cursor: default;
+  font-weight: 400;
+  user-select: text;
 }
 
 /* ================================
@@ -282,3 +287,22 @@ body.pdf-mode > img.logo {
 }
 body.pdf-mode #loader40 { display: none !important; }
 
+.hidden {
+  display: none !important;
+}
+
+#user-actions {
+  position: fixed;
+  top: 70px;        /* unterhalb von login-info */
+  right: 15px;
+  text-align: right;
+  z-index: 1000;
+}
+
+#user-actions select {
+  width: 210px;
+  padding: 8px;
+  background: #fff6d5;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}

@@ -7,15 +7,24 @@
 <link rel="icon" href="favicon.ico">
 </head>
 <body>
-
+<div id="app" class="hidden">
 <img src="logo.png" class="logo">
 
 <!-- Countdown -->
-<div id="release-info">Release: V1.0.8</div>
+<div id="release-info">Release: V1.0.9</div>
 <div id="timer">Logout in: 10:00</div>
 
 <!-- NEU: Angemeldet als -->
 <div id="login-info"></div>
+
+<div id="user-actions" class="hidden">
+  <select id="user-action-select" onchange="handleUserAction(this.value)">
+    <option value="">Aktion auswählen…</option>
+    <option value="changePw">Passwort ändern</option>
+    <option value="logout">Abmelden</option>
+  </select>
+</div>
+
 
 <!-- SEITE 1: LOGIN -->
 <div class="page active" id="page-login">
@@ -536,7 +545,7 @@
   <div class="spinner"></div>
   <div class="loader-text">Ausgabe wird erstellt…</div>
 </div>
-
+</div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script type="module" src="app.js"></script>
 

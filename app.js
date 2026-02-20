@@ -5,6 +5,24 @@ let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
 let page40Promise = null;
 
+// -----------------------------
+// Drop-down Menü
+// -----------------------------
+
+function handleUserAction(val) {
+  if (!val) return;
+
+  if (val === "changePw") goToChange();
+  if (val === "logout") logout();
+
+  // zurücksetzen, damit man die gleiche Aktion nochmal wählen kann
+  const sel = document.getElementById("user-action-select");
+  if (sel) sel.value = "";
+}
+window.handleUserAction = handleUserAction;
+
+
+
 
 		// -----------------------------
 		// Firebase - E-Mail+Passwort
@@ -19,7 +37,7 @@ import {
   signOut,
   onAuthStateChanged,
   setPersistence,
-  inMemoryPersistence
+  browserSessionPersistence
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
 import {
@@ -43,25 +61,46 @@ const fbApp = initializeApp(firebaseConfig);
 const auth = getAuth(fbApp);
 (async () => {
   // 1) Persistenz: nichts im Browser behalten
-  await setPersistence(auth, inMemoryPersistence);
+  await setPersistence(auth, browserSessionPersistence);
 
   // 2) EINMALIGER Cleanup: falls noch eine alte Session (local) rumliegt, abmelden
   // (nachdem du das einmal deployed hast, ist es danach dauerhaft sauber)
-  await signOut(auth);
+  // await signOut(auth);
 
   // 3) Listener erst DANACH
   onAuthStateChanged(auth, user => {
-    const info = document.getElementById("login-info");
+  const info = document.getElementById("login-info");
 
-    if (user) {
-      if (info) info.innerText = "Angemeldet als: " + user.email;
-      updateAdminUI_();
-    } else {
-      if (info) info.innerText = "";
-      updateAdminUI_();
-      showPage("page-login");
-    }
-  });
+  if (user) {
+    if (info) info.innerText = "Angemeldet als: " + user.email;
+    updateAdminUI_();
+
+    // Zielseite bestimmen: letzte Seite (aber nie login) – ansonsten Seite 3
+    const last = sessionStorage.getItem("lastPage");
+    const target =
+      last && last !== "page-login"
+        ? last
+        : "page-3";
+
+    showPage(target);
+
+  } else {
+    if (info) info.innerText = "";
+    updateAdminUI_();
+    showPage("page-login");
+  }
+
+const actions = document.getElementById("user-actions");
+
+if (user) {
+  if (actions) actions.classList.remove("hidden");
+} else {
+  if (actions) actions.classList.add("hidden");
+}
+
+ // 🔥 ERST JETZT App sichtbar machen
+  if (app) app.classList.remove("hidden");
+});
 })();
 
 const db = getFirestore(fbApp);
@@ -71,8 +110,15 @@ const db = getFirestore(fbApp);
 		// -----------------------------
 
 async function showPage(id) {
+  // letzte Seite merken (nur für dieses Tab/Fenster)
+  sessionStorage.setItem("lastPage", id);
+
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
-  document.getElementById(id).classList.add("active");
+  const el = document.getElementById(id);
+  if (!el) return;           // Sicherheitsnetz
+  el.classList.add("active");
+
+document.getElementById(id).classList.add("active");
 
   if (id === "page-14") loadPage14();
   if (id === "page-14-3") loadPage143();
