@@ -5,6 +5,43 @@ let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
 let page40Promise = null;
 
+
+// -----------------------------
+// Bei Reload (F5) Eingabefelder auf 0 setzen
+// -----------------------------
+
+function resetStoredInputsOnReload() {
+  // Reload erkennen (F5 / Browser-Reload)
+  const nav = performance.getEntriesByType("navigation")[0];
+  const isReload = nav && nav.type === "reload";
+
+  if (!isReload) return;
+
+  // Nur deine Eingabe-/Angebotsdaten löschen (Auth bleibt erhalten!)
+  const keysToRemove = [
+    "page5Data",
+    "angebotTyp",
+    "angebotSummen",
+
+    "page14Data",
+    "page142Data",
+    "page8Data",
+    "page18Data",
+    "page20Data",
+    "page21Data",
+    "page22Data",
+    "page9Data",
+    "page10Data",
+    "page23Data",
+    "page24Data"
+  ];
+
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+}
+
+// SOFORT ausführen (möglichst früh)
+resetStoredInputsOnReload();
+
 // -----------------------------
 // Drop-down Menü
 // -----------------------------
@@ -13,6 +50,10 @@ function handleUserAction(val) {
   if (!val) return;
 
   if (val === "changePw") goToChange();
+  if (val === "clear") {
+    const ok = confirm("Alle Eingaben wirklich löschen?");
+    if (ok) clearInputs();
+  }
   if (val === "logout") logout();
 
   // zurücksetzen, damit man die gleiche Aktion nochmal wählen kann
@@ -77,10 +118,7 @@ const auth = getAuth(fbApp);
 
     // Zielseite bestimmen: letzte Seite (aber nie login) – ansonsten Seite 3
     const last = sessionStorage.getItem("lastPage");
-    const target =
-      last && last !== "page-login"
-        ? last
-        : "page-3";
+    const target = getInitialPage();
 
     showPage(target);
 
@@ -109,9 +147,14 @@ const db = getFirestore(fbApp);
 		// showPage
 		// -----------------------------
 
-async function showPage(id) {
+async function showPage(id, fromHistory = false) {
   // letzte Seite merken (nur für dieses Tab/Fenster)
   sessionStorage.setItem("lastPage", id);
+
+// Browser-History nur setzen, wenn NICHT durch Zurück/Vor ausgelöst
+  if (!fromHistory) {
+    history.pushState({ page: id }, "", "#" + id);
+  }
 
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   const el = document.getElementById(id);
@@ -3860,6 +3903,27 @@ function showLoader40(show) {
   const l = document.getElementById("loader40");
   if (!l) return;
   l.classList.toggle("hidden", !show);
+}
+
+		// -----------------------------
+
+window.addEventListener("popstate", (e) => {
+  const page = e.state?.page;
+
+  if (!page) return;
+
+  // Sicherheit: Login-Seite blockieren, wenn eingeloggt
+  if (page === "page-login" && auth.currentUser) {
+    showPage("page-3", true);
+    return;
+  }
+
+  showPage(page, true);
+});
+
+function getInitialPage() {
+  const hash = location.hash.replace("#", "");
+  return hash || "page-3";
 }
 
 		// -----------------------------

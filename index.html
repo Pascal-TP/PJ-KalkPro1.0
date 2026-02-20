@@ -20,6 +20,7 @@
 <div id="user-actions" class="hidden">
   <select id="user-action-select" onchange="handleUserAction(this.value)">
     <option value="">Aktion auswählen…</option>
+    <option value="clear">Eingaben löschen</option>
     <option value="changePw">Passwort ändern</option>
     <option value="logout">Abmelden</option>
   </select>
@@ -35,11 +36,10 @@
 
     <div class="error" id="loginError"></div>
 
-    <button onclick="login()">Anmelden / Weiter</button>
+    <button onclick="login()">Anmelden</button>
 
     <button onclick="forgotPassword()">Passwort vergessen</button>
-    <button onclick="goToChange()">Passwort ändern</button>
-    <button onclick="logout()">Abmelden</button>
+    
 </div>
 
 <!-- SEITE 2: PASSWORT ÄNDERN -->
