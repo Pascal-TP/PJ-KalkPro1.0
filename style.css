@@ -207,7 +207,7 @@ button:active {
   #page-40 { display: block !important; }
 
   /* Buttons/Nav etc. ausblenden */
-  button, .nav, #timer, #login-info, #release-info {
+  button, .nav, #timer, #login-info, #release-info, #user-actions {
     display: none !important;
   }
 }
