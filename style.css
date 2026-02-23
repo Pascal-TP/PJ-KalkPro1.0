@@ -24,6 +24,10 @@ body {
     display: block;
 }
 
+.page {
+  padding-top: 220px;  /* Platz für Info + Logo */
+}
+
 input {
     display: block;
     margin: 10px auto;
