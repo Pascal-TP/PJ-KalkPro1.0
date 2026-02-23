@@ -150,6 +150,30 @@ button:active {
     text-align: left;
   }
 
+/* ================================
+   Smartphone: Tabellen NICHT stapeln, sondern horizontal scrollen
+   (nur für Seiten mit .price-table)
+================================ */
+@media (max-width: 600px) {
+
+  /* Scroll-Container */
+  .price-table {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Zeilen bleiben grid (nicht block) */
+  .price-table .row {
+    display: grid;
+    min-width: 760px;   /* <- so breit, dass Header sauber bleibt (ggf. anpassen) */
+  }
+
+  /* Headertexte nicht umbrechen */
+  .price-table .row.table-header > div {
+    white-space: nowrap;
+  }
+}
+
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
 
 }
