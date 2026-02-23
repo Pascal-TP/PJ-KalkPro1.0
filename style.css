@@ -1,87 +1,90 @@
-/* =========================================
-   PJ KalkPro – style.css (bereinigt + Sticky Header für price-table)
-   - stabile Mobile-Tabellen (Variante A: horizontal scroll)
-   - Sticky Header NUR für .price-table
-   - Seite 40 bleibt im eigenen Grid
-========================================= */
-
-/* Einheitliches Box-Modell */
-*, *::before, *::after { box-sizing: border-box; }
-
-/* verhindert iOS/Chrome Text-Autosizing */
-html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
-
 body {
-  margin: 0;
-  font-family: "Segoe UI", sans-serif;
-  background: #efefef;
-  text-align: center;
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    background: #efefef;
+    text-align: center;
 }
 
 .logo {
-  margin: 30px auto;
-  display: block;
-  width: 50%;
-  max-width: 400px;
+    margin: 30px auto;
+    display: block;
+    width: 50%;
+    max-width: 400px;
 }
 
-.page { display: none; }
-.page.active { display: block; }
+.page {
+    display: none;
+}
 
-.hidden { display: none !important; }
+.page.active {
+    display: block;
+}
 
 input {
-  display: block;
-  margin: 10px auto;
-  padding: 10px;
-  width: 250px;
-  background: #fff6d5;
-  border: 1px solid #ccc;
+    display: block;
+    margin: 10px auto;
+    padding: 10px;   
+    width: 250px;
+    background: #fff6d5;
+    border: 1px solid #ccc;
 }
 
 button {
-  background: #0b2a4a;
-  color: white;
-  border: none;
-  padding: 12px 22px;
-  margin: 6px;
-  cursor: pointer;
-  border-radius: 6px;
-  font-weight: 600;
-  transition: 0.2s ease;
+    background: #0b2a4a;
+    color: white;
+    border: none;
+    padding: 12px 22px;
+    margin: 6px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: 0.2s ease;
 }
-button:hover { background: #163f6f; transform: translateY(-1px); }
-button:active { transform: translateY(0px); }
 
-.error { color: darkred; margin: 10px; }
+button:hover {
+    background: #163f6f;
+    transform: translateY(-1px);
+}
+
+button:active {
+    transform: translateY(0px);
+}
+
+.error {
+    color: darkred;
+    margin: 10px;
+}
 
 .hint {
-  max-width: 600px;
-  margin: 20px auto;
-  font-size: 14px;
+    max-width: 600px;
+    margin: 20px auto;
+    font-size: 14px;
 }
 
-/* Fixed UI oben rechts */
 #release-info {
-  position: fixed;
-  top: 10px;
-  right: 15px;
-  font-size: 14px;
-  text-align: right;
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    font-size: 14px;
+    text-align: right;
 }
+
 #timer {
-  position: fixed;
-  top: 30px;
-  right: 15px;
-  font-size: 14px;
-  text-align: right;
+    position: fixed;
+    top: 30px;
+    right: 15px;
+    font-size: 14px;
+    text-align: right;
 }
+
 #login-info {
   position: fixed;
   top: 50px;
   right: 15px;
   font-size: 14px;
   text-align: right;
+
+  /* NEU: kein Link-Verhalten */
   cursor: default;
   font-weight: 400;
   user-select: text;
@@ -90,163 +93,104 @@ button:active { transform: translateY(0px); }
 /* ================================
    TITEL / UNTERTITEL / ZWISCHENTITEL – global
 ================================ */
-.title    { text-align: center; font-weight: bold; font-size: clamp(18px, 5vw, 24px); margin-top: 25px; }
-.subtitle { text-align: center; font-weight: bold; font-size: clamp(15px, 4vw, 18px); margin-top: 20px; }
-.midtitle { text-align: center; font-weight: bold; font-size: clamp(14px, 3.5vw, 16px); margin-top: 15px; }
+.title { text-align: center;font-weight: bold; font-size: 24px; margin-top: 25px; }
+.subtitle { text-align: center;font-weight: bold; font-size: 18px; margin-top: 20px; }
+.midtitle { text-align: center;font-weight: bold; font-size: 16px; margin-top: 15px; }
 
-/* ================================
-   PRICE TABLES (Seiten 8/9/10/…)
-================================ */
 .price-table {
-  max-width: 1200px;
-  margin: auto;
-  padding: 20px;
-
-  /* Variante A: horizontales Scrollen, wenn nötig */
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
 }
 
-/* Jede Zeile bleibt Grid (auch auf Mobile) */
 .price-table .row {
-  display: grid;
-  grid-template-columns: 160px 4fr 100px 100px 120px 120px;
-  gap: 15px;
-  margin-bottom: 12px;
-  align-items: center;
-
-  /* verhindert “zu schmal werden” -> dann lieber scrollen */
-  min-width: 760px; /* ggf. auf 820px erhöhen, falls Header enger wirkt */
+    display: grid;
+    grid-template-columns: 160px 4fr 100px 100px 120px 120px;
+    gap: 15px;
+    margin-bottom: 12px;
+    align-items: center;
 }
 
-/* feste Spaltenzuordnung -> kein Auto-Placement “Verrutschen” */
-.price-table .row > .col-a { grid-column: 1; text-align: left; font-weight: bold; }
-.price-table .row > .col-b { grid-column: 2; text-align: left; padding-left: 5px; }
-.price-table .row > .col-c { grid-column: 3; text-align: right; }
-.price-table .row > input.menge-input { grid-column: 4; }
-.price-table .row > .col-d { grid-column: 5; text-align: right; }
-.price-table .row > .col-e { grid-column: 6; text-align: right; }
-
-/* (falls irgendwo col-f auftaucht) */
+.price-table .col-a { text-align: left; font-weight: bold; }
+.price-table .col-b { text-align: left; padding-left: 5px; }
+.price-table .col-c,
+.price-table .col-d,
+.price-table .col-e { text-align: right; }
 .price-table .col-f { text-align: right; }
 
-/* Mengenfeld (Tabellen) */
+
 .price-table input.menge-input {
-  background-color: #fff8dc;
-  padding: 5px;
-  width: 80px;
-  text-align: center;
-  margin: 0;
-  justify-self: center;
+    background-color: #fff8dc;
+    padding: 5px;
+    width: 80px;
+    text-align: center;
 }
-
-/* no-price Zeilen robust (statt 2/7 -> 2/-1) */
-.price-table .row.no-price .col-b {
-  grid-column: 2 / -1;
-}
-
 /* ================================
-   Sticky Header NUR für price-table
-================================ */
-.table-header {
-  font-weight: 600;
-  font-size: 14px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ccc;
-  padding-bottom: 6px;
-}
-.table-header > div { opacity: 0.9; }
-
-/* Sticky machen */
-.price-table .row.table-header {
-  position: sticky;
-  top: 0;                /* bleibt oben kleben beim Scrollen */
-  z-index: 20;
-  background: #efefef;   /* passt zur Body-Farbe; alternativ: #fff */
-  border-bottom: 1px solid #ccc;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  margin-bottom: 12px;
-
-  /* optisch: leicht abheben */
-  box-shadow: 0 2px 0 rgba(0,0,0,0.04);
-}
-
-/* Headertexte nicht umbrechen */
-.price-table .row.table-header > div {
-  white-space: nowrap;
-}
-
-/* ================================
-   Smartphone – Allgemein (NICHT price-table)
-   -> hier darf gestapelt werden
+   Smartphone – global für alle Seiten
 ================================ */
 @media (max-width: 600px) {
-  /* normale Inputs responsiver */
-  input:not(.menge-input) {
-    width: min(92vw, 360px);
-  }
+    .row { display: block; }
 
-  /* Alles, was nicht in .price-table ist, darf stapeln */
-  .row:not(.table-header):not(.summary-row) {
-    display: block;
-  }
+    .row > div,
+    .row > input {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 5px;
+    }
 
-  .row:not(.table-header):not(.summary-row) > div,
-  .row:not(.table-header):not(.summary-row) > input {
-    display: block;
-    width: 100%;
-    text-align: left;
-    margin-bottom: 6px;
-  }
+    input.menge-input { width: 100%; }
 }
 
-/* ================================
-   SEITE 40 (Ausgabe) – eigenes Layout (unberührt)
-================================ */
 #page-40 {
-  max-width: 1100px;
-  margin: auto;
-  padding: 30px;
-  background: white;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    max-width: 1100px;
+    margin: auto;
+    padding: 30px;
+    background: white;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
-
-/* Grid NUR in Seite 40 */
-#page-40 .row {
-  display: grid;
-  grid-template-columns:
-    80px
-    1.5fr
-    1fr
-    100px
-    120px
-    120px;
-  gap: 10px;
-  align-items: center;
-  margin-bottom: 6px;
+.row {
+    display: grid;
+    grid-template-columns: 
+        80px       /* Pos */
+        1.5fr      /* Beschreibung */
+        1fr        /* Zusatz */
+        100px      /* Menge */
+        120px      /* EP */
+        120px;     /* Gesamt */
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 6px;
+}
+.menge-input {
+    width: 80px;
+    text-align: right;
 }
 
 /* ================================
-   Hinweise (ndf4.csv)
+   Allgemeine Hinweise (ndf4.csv)
 ================================ */
 #hinweise-content {
-  text-align: left;
-  max-width: 1000px;
-  margin: 30px auto;
+    text-align: left;
 }
+
 #hinweise-content .title,
 #hinweise-content .subtitle,
 #hinweise-content .midtitle {
-  text-align: left;
-}
-#hinweise-content .hinweis-row {
-  text-align: left;
-  margin: 6px 0;
-  line-height: 1.5;
+    text-align: left;
 }
 
-/* Rabattzeile */
+#hinweise-content .hinweis-row {
+    text-align: left;
+    margin: 6px 0;
+    line-height: 1.5;
+}
+#hinweise-content {
+    max-width: 1000px;
+    margin: 30px auto;
+}
+.hidden { display: none; }
+
 .gesamt.rabatt {
   font-size: 14px;
   font-weight: 600;
@@ -254,15 +198,30 @@ button:active { transform: translateY(0px); }
   opacity: 0.9;
 }
 
-/* ================================
-   PRINT
-================================ */
 @media print {
+
+  /* alles ausblenden */
   .page { display: none !important; }
+
+  /* nur Seite 40 drucken */
   #page-40 { display: block !important; }
+
+  /* Buttons/Nav etc. ausblenden */
   button, .nav, #timer, #login-info, #release-info {
     display: none !important;
   }
+}
+
+.table-header {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 6px;
+}
+
+.table-header > div {
+  opacity: 0.9;
 }
 
 /* ===== PDF-Modus (für html2pdf/html2canvas) ===== */
@@ -274,10 +233,12 @@ body.pdf-mode #release-info {
   display: none !important;
 }
 
+/* Das „normale“ Logo oben außerhalb von Seite 40 im PDF ausblenden */
 body.pdf-mode > img.logo {
   display: none !important;
 }
 
+/* Temporäres PDF-Logo in Seite 40 */
 #page-40 .temp-pdf-logo {
   display: block;
   width: 260px;
@@ -285,12 +246,12 @@ body.pdf-mode > img.logo {
   margin: 10px auto 20px auto;
 }
 
+/* verhindert, dass einzelne Zeilen im PDF “abgeschnitten” werden */
 #page-40 .row {
   break-inside: avoid;
   page-break-inside: avoid;
 }
 
-/* Loader */
 .loader {
   position: fixed;
   inset: 0;
@@ -301,7 +262,10 @@ body.pdf-mode > img.logo {
   justify-content: center;
   z-index: 9999;
 }
-.loader.hidden { display: none !important; }
+.loader.hidden {
+  display: none !important;
+}
+
 
 .spinner {
   width: 56px;
@@ -311,23 +275,30 @@ body.pdf-mode > img.logo {
   border-radius: 50%;
   animation: spin 0.9s linear infinite;
 }
+
 .loader-text {
   margin-top: 12px;
   font-weight: 600;
   color: #0b2a4a;
 }
-@keyframes spin { to { transform: rotate(360deg); } }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 body.pdf-mode #loader40 { display: none !important; }
 
-/* User actions dropdown */
+.hidden {
+  display: none !important;
+}
+
 #user-actions {
   position: fixed;
-  top: 70px;
+  top: 70px;        /* unterhalb von login-info */
   right: 15px;
   text-align: right;
   z-index: 1000;
 }
+
 #user-actions select {
   width: 210px;
   padding: 8px;
@@ -335,12 +306,12 @@ body.pdf-mode #loader40 { display: none !important; }
   border: 1px solid #ccc;
   border-radius: 6px;
 }
+
 #user-action-select option[value="logout"] {
   font-weight: 700;
-  color: #b00020;
+  color: #b00020; /* dezentes Rot */
 }
 
-/* Start slogan */
 .start-slogan {
   margin-top: 20px;
   font-size: 20px;

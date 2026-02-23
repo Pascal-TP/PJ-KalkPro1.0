@@ -5,6 +5,7 @@ let fraesenHinweisGezeigt = false;
 let fraesenVerwendet = false;
 let page40Promise = null;
 
+
 // -----------------------------
 // Startbild wechselt nach 3 Sekunden
 // -----------------------------
@@ -81,6 +82,7 @@ function handleUserAction(val) {
 }
 window.handleUserAction = handleUserAction;
 
+
 // -----------------------------
 // Firebase - E-Mail+Passwort
 // -----------------------------
@@ -153,7 +155,6 @@ if (user) {
   if (actions) actions.classList.add("hidden");
 }
 
-const app = document.getElementById("app");
  // 🔥 ERST JETZT App sichtbar machen
   if (app) app.classList.remove("hidden");
 });
