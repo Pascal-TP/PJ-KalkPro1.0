@@ -6,10 +6,14 @@ body {
 }
 
 .logo {
-    margin: 30px auto;
-    display: block;
-    width: 50%;
-    max-width: 400px;
+  position: fixed;
+  top: 90px;          /* unterhalb von „Angemeldet als“ */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  max-width: 400px;
+  margin: 0;
+  z-index: 900;
 }
 
 .page {
@@ -317,4 +321,14 @@ body.pdf-mode #loader40 { display: none !important; }
   font-size: 20px;
   font-weight: 500;
   color: #333;
+}
+/* Seite 40: falls Inhalt breiter wird, sauber horizontal scrollen statt „verschoben wirken“ */
+#page-40 {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Buttons immer zentrieren */
+#page-40 .button-bar {
+  text-align: center;
 }
