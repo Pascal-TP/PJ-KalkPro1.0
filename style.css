@@ -6,8 +6,7 @@ body {
 }
 
 .logo {
-    margin-top: 90px;
-    top: 90px;
+    margin: 90px auto;
     display: block;
     width: 50%;
     max-width: 400px;
