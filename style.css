@@ -62,7 +62,7 @@ button:active {
 }
 
 #release-info {
-    position: fixed;
+    position: static;
     top: 10px;
     right: 15px;
     font-size: 14px;
@@ -70,7 +70,7 @@ button:active {
 }
 
 #timer {
-    position: fixed;
+    position: static;
     top: 30px;
     right: 15px;
     font-size: 14px;
@@ -78,7 +78,7 @@ button:active {
 }
 
 #login-info {
-  position: fixed;
+  position: static;
   top: 50px;
   right: 15px;
   font-size: 14px;
