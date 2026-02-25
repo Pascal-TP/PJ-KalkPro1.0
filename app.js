@@ -107,13 +107,13 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDPQ-cU4J_YnxR9uiIWANohAlh1TO-uXg0",
-  authDomain: "pw-pj-ndf.firebaseapp.com",
-  projectId: "pw-pj-ndf",
-  storageBucket: "pw-pj-ndf.firebasestorage.app",
-  messagingSenderId: "595420395595",
-  appId: "1:595420395595:web:951abb4589f1d78bfc35ce",
-  measurementId: "G-VYRW1EY6N0"
+  apiKey: "AIzaSyBZqRmkbgeMDPUEKgowBKnXCzg0xPQnZVE",
+  authDomain: "pw-pj-ndf-f9d52.firebaseapp.com",
+  projectId: "pw-pj-ndf-f9d52",
+  storageBucket: "pw-pj-ndf-f9d52.firebasestorage.app",
+  messagingSenderId: "732616641079",
+  appId: "1:732616641079:web:60538312ca75b3f3e48db2",
+  measurementId: "G-0G2B43LSGX"
 };
 
 const fbApp = initializeApp(firebaseConfig);
