@@ -1034,6 +1034,60 @@ function sendMailPage40() {
 }
 
 		// -----------------------------
+		// SEITE 40 – Export als CSV - (Button "Export CsV")
+		// -----------------------------
+
+function exportCsvPage40() {
+  const rows = document.querySelectorAll("#summary-content .summary-row");
+  if (!rows.length) {
+    alert("Keine Tabelleninhalte zum Export vorhanden.");
+    return;
+  }
+
+  const SEP = "-"; // Vorgabe
+
+  // Excel-Hinweiszeile, damit es sicher in Spalten trennt (auch bei "-")
+  const lines = [];
+  lines.push(`sep=${SEP}`);
+
+  // Kopfzeile
+  lines.push(["Artikelnummer", "Menge"].join(SEP));
+
+  // Werte "CSV-sicher" machen (ohne Anführungszeichen)
+  function clean(val) {
+    return String(val ?? "")
+      .trim()
+      .replace(/\r?\n/g, " "); // keine Zeilenumbrüche in Zellen
+  }
+
+  rows.forEach(r => {
+    const artikel = clean(r.querySelector(".col-a")?.innerText);
+    const menge   = clean(r.querySelector(".col-d")?.innerText);
+
+    lines.push([artikel, menge].join(SEP));
+  });
+
+  const csv = lines.join("\n");
+
+  const datum = new Date().toLocaleDateString("de-DE").replaceAll(".", "-");
+  const filename = `PJ_KalkPro_CSV-Export_${datum}.csv`;
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+
+window.exportCsvPage40 = exportCsvPage40;
+
+		// -----------------------------
 		// clearInputs - Button "Eingaben löschen"
 		// -----------------------------
 
