@@ -6,22 +6,22 @@ Untertitel;liefern und verlegen;;
 ;- Trockenausgleichschüttung Vermibit;;
 ;;;
 Zwischentitel;100 kPa - WLG035;;
-H54NO2000 01;EPS-Platten 20 mm in WLG035 100 kPa;€/m²;6,9
-H54NO2005 01;EPS-Platten 30 mm in WLG035 100 kPa;€/m²;8
-H54NO2010 01;EPS-Platten 40 mm in WLG035 100 kPa;€/m²;9,1
-H54NO2015 01;EPS-Platten 50 mm in WLG035 100 kPa;€/m²;10,1
-H54NO2020 01;EPS-Platten 60 mm in WLG035 100 kPa;€/m²;11,2
+H54NO200001;EPS-Platten 20 mm in WLG035 100 kPa;€/m²;6,9
+H54NO200501;EPS-Platten 30 mm in WLG035 100 kPa;€/m²;8
+H54NO201001;EPS-Platten 40 mm in WLG035 100 kPa;€/m²;9,1
+H54NO201501;EPS-Platten 50 mm in WLG035 100 kPa;€/m²;10,1
+H54NO202001;EPS-Platten 60 mm in WLG035 100 kPa;€/m²;11,2
 ;;;
 Zwischentitel;100 kPa - WLG032;;
-H54NO2025 01;EPS-Platten 20 mm in WLG032 100 kPa;€/m²;7,4
-H54NO2030 01;EPS-Platten 30 mm in WLG032 100 kPa;€/m²;8,7
-H54NO2035 01;EPS-Platten 40 mm in WLG032 100 kPa;€/m²;10
-H54NO2040 01;EPS-Platten 50 mm in WLG032 100 kPa;€/m²;11,3
-H54NO2045 01;EPS-Platten 60 mm in WLG032 100 kPa;€/m²;12,6
+H54NO202501;EPS-Platten 20 mm in WLG032 100 kPa;€/m²;7,4
+H54NO203001;EPS-Platten 30 mm in WLG032 100 kPa;€/m²;8,7
+H54NO203501;EPS-Platten 40 mm in WLG032 100 kPa;€/m²;10
+H54NO204001;EPS-Platten 50 mm in WLG032 100 kPa;€/m²;11,3
+H54NO204501;EPS-Platten 60 mm in WLG032 100 kPa;€/m²;12,6
 ;;;
 Zwischentitel;PUR - 150 kPa - WLG023;;
-H54NO2050 01;PUR-Platten 20 mm in WLG023/024 150 kPa;€/m²;13,3
-H54NO2055 01;PUR-Platten 30 mm in WLG023/024 150 kPa;€/m²;14,6
-H54NO2060 01;PUR-Platten 40 mm in WLG023/024 150 kPa;€/m²;16,3
-H54NO2065 01;PUR-Platten 50 mm in WLG023/024 150 kPa;€/m²;17,8
-H54NO2070 01;PUR-Platten 60 mm in WLG023/024 150 kPa;€/m²;19,7
+H54NO205001;PUR-Platten 20 mm in WLG023/024 150 kPa;€/m²;13,3
+H54NO205501;PUR-Platten 30 mm in WLG023/024 150 kPa;€/m²;14,6
+H54NO206001;PUR-Platten 40 mm in WLG023/024 150 kPa;€/m²;16,3
+H54NO206501;PUR-Platten 50 mm in WLG023/024 150 kPa;€/m²;17,8
+H54NO207001;PUR-Platten 60 mm in WLG023/024 150 kPa;€/m²;19,7

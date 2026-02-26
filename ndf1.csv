@@ -16,10 +16,10 @@ Untertitel;als Tackersystem liefern und montieren;;
 ;- Baustelleneinrichtung, Müllentsorgung, Bauleitung, Heizflächenauslegung und Abdrücken der Fußbodenheizung mit Luft sind im Preis enthalten;;
 ;- nicht enthalten: Montage der Verteiler, Schränke, Klemmleisten, Stellantriebe, Raumthermostate ;;
 ;;;
-H54NO0001 01;Tackerplatte WLG045 20-2 mm;€/m²;26,9
-H54NO0005 01;Tackerplatte WLG045 30-3 mm;€/m²;27,4
-H54NO0010 01;Tackerplatte WLG040 30-2 mm;€/m²;27,7
-H54NO0015 01;Tackerplatte WLG035 30 mm;€/m²;28,8
+H54NO000101;Tackerplatte WLG045 20-2 mm;€/m²;26,9
+H54NO000501;Tackerplatte WLG045 30-3 mm;€/m²;27,4
+H54NO001001;Tackerplatte WLG040 30-2 mm;€/m²;27,7
+H54NO001501;Tackerplatte WLG035 30 mm;€/m²;28,8
 ;;;
 Zwischentitel;wir vor, jedoch mit Systemplatte Flipfix;;
 100BIE032;2 mm Hohlkammer-Platte;€/m²;29,1
@@ -27,8 +27,8 @@ Zwischentitel;wir vor, jedoch mit Systemplatte Flipfix;;
 ;;;
 Titel;Mehrpreise für Rohrvarianten;;
 Untertitel;Für die Verlegung eines anderen Heizrohrs;;
-H54NO5000 01;Xc-/Xa-Rohr 16/17x2 mm;€/m²;1,5
-H54NO5005 01;Metall/Aluverbundrohr 16x2 mm;€/m²;1,6
+H54NO500001;Xc-/Xa-Rohr 16/17x2 mm;€/m²;1,5
+H54NO500501;Metall/Aluverbundrohr 16x2 mm;€/m²;1,6
 ;;;
 Untertitel;Engerer Verlegeabstand des Heizrohres, zum Beispiel für Kühlfunktion;;
-H54NO5015 01;Verlegeabstand 100 mm;€/m²;2,9
+H54NO501501;Verlegeabstand 100 mm;€/m²;2,9
