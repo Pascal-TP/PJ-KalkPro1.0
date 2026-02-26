@@ -407,3 +407,12 @@ body.pdf-mode #page-40 .hinweis-row {
   font-size: 11.5px;
   color: #333;
 }
+
+/* Seite 40 – Positions-Typografie */
+#page-40 table,
+#page-40 th,
+#page-40 td,
+#page-40 .summary-row,
+#page-40 .summary-cell {
+  font-size: 11.5px;
+}
