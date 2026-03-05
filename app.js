@@ -1,4 +1,16 @@
 let currentUser = null;
+function isLoggedIn() {
+  return !!currentUser;
+}
+
+function lockAppUI() {
+  document.body.classList.add("app-locked");
+}
+
+function unlockAppUI() {
+  document.body.classList.remove("app-locked");
+}
+
 let logoutTimer;
 let remaining = 600;
 let fraesenHinweisGezeigt = false;
@@ -128,9 +140,11 @@ const auth = getAuth(fbApp);
 
   // 3) Listener erst DANACH
   onAuthStateChanged(auth, user => {
+    currentUser = user || null;
   const info = document.getElementById("login-info");
 
   if (user) {
+    unlockAppUI();
     if (info) info.innerText = "Angemeldet als: " + user.email;
     updateAdminUI_();
 
@@ -141,6 +155,7 @@ const auth = getAuth(fbApp);
     showPage(target);
 
   } else {
+    lockAppUI();
     if (info) info.innerText = "";
     updateAdminUI_();
     showPage("page-start", true);
@@ -156,7 +171,8 @@ if (user) {
 }
 
  // 🔥 ERST JETZT App sichtbar machen
-  if (app) app.classList.remove("hidden");
+  const app = document.getElementById("app");
+if (app) app.classList.remove("hidden");
 });
 })();
 
@@ -167,8 +183,19 @@ const db = getFirestore(fbApp);
 		// -----------------------------
 
 async function showPage(id, fromHistory = false) {
-  // letzte Seite merken (nur für dieses Tab/Fenster)
-  sessionStorage.setItem("lastPage", id);
+
+        // Ohne Login nur diese Seiten erlauben:
+  const publicPages = new Set(["page-login", "page-start", "page-change"]);
+
+  if (!isLoggedIn() && !publicPages.has(id)) {
+    console.warn("Blocked navigation (not logged in):", id);
+    id = "page-login";
+  }
+
+  // letzte Seite merken (nur wenn eingeloggt und nicht login/start)
+  if (isLoggedIn()) {
+    sessionStorage.setItem("lastPage", id);
+  }
 
 // Browser-History nur setzen, wenn NICHT durch Zurück/Vor ausgelöst
   if (!fromHistory) {
@@ -178,8 +205,7 @@ async function showPage(id, fromHistory = false) {
   document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
   const el = document.getElementById(id);
   if (!el) return;           // Sicherheitsnetz
-  el.classList.add("active");
-
+  
 document.getElementById(id).classList.add("active");
 
   if (id === "page-14") loadPage14();
@@ -510,6 +536,8 @@ let page14Loaded = false;
 
 function loadPage14() {
 
+    if (!isLoggedIn()) return;
+    
     if (page14Loaded) return; // nicht doppelt laden
     page14Loaded = true;
 
@@ -652,7 +680,8 @@ function berechneGesamt14() {
 		// -----------------------------
 
 function loadPage143() {
-
+    if (!isLoggedIn()) return;
+   
   const container = document.getElementById("content-14-3");
   if (!container) return;
 
@@ -889,7 +918,8 @@ function extractTriggeredTextBlocks(lines, dataObj) {
 
 
 async function loadPage40() {
-
+    if (!isLoggedIn()) return;
+   
     const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
     const titleEl = document.getElementById("page40-title");
     if (titleEl) {
@@ -1112,6 +1142,7 @@ function printPage40() {
 		// -----------------------------
 
 function sendMailPage40() {
+    if (!isLoggedIn()) return;
 
     const angebotTyp = localStorage.getItem("angebotTyp") || "kv";
 
@@ -1137,6 +1168,7 @@ function sendMailPage40() {
 		// -----------------------------
 
 function exportCsvPage40() {
+    if (!isLoggedIn()) return;
   const rows = document.querySelectorAll("#summary-content .summary-row");
   if (!rows.length) {
     alert("Keine Tabelleninhalte zum Export vorhanden.");
@@ -1320,7 +1352,8 @@ if (p40r) p40r.innerText = "Gesamtpreis abzgl. SHK-Rabatt (15%): 0,00 €";
 		// -----------------------------
 
 function loadPage142() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-14-2");
     if (!container) return;
 
@@ -1461,7 +1494,8 @@ function berechneGesamt142() {
 		// -----------------------------
 
 function loadPage8() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-8");
     if (!container) return;
 
@@ -1635,7 +1669,8 @@ function berechneGesamt8() {
 		// -----------------------------
 
 function loadPage18() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-18");
     if (!container) return;
 
@@ -1777,7 +1812,8 @@ function berechneGesamt18() {
 		// -----------------------------
 
 function loadPage20() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-20");
     if (!container) return;
 
@@ -1919,7 +1955,8 @@ function berechneGesamt20() {
 		// -----------------------------
 
 function loadPage21() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-21");
     if (!container) return;
 
@@ -2061,7 +2098,8 @@ function berechneGesamt21() {
 		// -----------------------------
 
 function loadPage22() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-22");
     if (!container) return;
 
@@ -2203,7 +2241,8 @@ function berechneGesamt22() {
 		// -----------------------------
 
 function loadPage9() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-9");
     if (!container) return;
 
@@ -2345,7 +2384,8 @@ function berechneGesamt9() {
 		// -----------------------------
 
 function loadPage10() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-10");
     if (!container) return;
 
@@ -2487,7 +2527,8 @@ function berechneGesamt10() {
 		// -----------------------------
 
 function loadPage23() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-23");
     if (!container) return;
 
@@ -2630,7 +2671,8 @@ function berechneGesamt23() {
 		// -----------------------------
 
 function loadPage24() {
-
+    if (!isLoggedIn()) return;
+   
     const container = document.getElementById("content-24");
     if (!container) return;
 
@@ -2773,7 +2815,8 @@ function berechneGesamt24() {
 		// -----------------------------
 
 function loadPage25() {
-
+    if (!isLoggedIn()) return;
+   
     const container = document.getElementById("content-25");
     if (!container) return;
 
@@ -2916,7 +2959,8 @@ function berechneGesamt25() {
 		// -----------------------------
 
 function loadPage27() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-27");
     if (!container) return;
 
@@ -3058,7 +3102,8 @@ function berechneGesamt27() {
 		// -----------------------------
 
 function loadPage28() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-28");
     if (!container) return;
 
@@ -3200,7 +3245,8 @@ function berechneGesamt28() {
 		// -----------------------------
 
 function loadPage30() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-30");
     if (!container) return;
 
@@ -3342,7 +3388,8 @@ function berechneGesamt30() {
 		// -----------------------------
 
 function loadPage31() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-31");
     if (!container) return;
 
@@ -3484,7 +3531,8 @@ function berechneGesamt31() {
 		// -----------------------------
 
 function loadPage32() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-32");
     if (!container) return;
 
@@ -3626,7 +3674,8 @@ function berechneGesamt32() {
 		// -----------------------------
 
 function loadPage33() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-33");
     if (!container) return;
 
@@ -3768,7 +3817,8 @@ function berechneGesamt33() {
 		// -----------------------------
 
 function loadPage13() {
-
+    if (!isLoggedIn()) return;
+    
     const container = document.getElementById("content-13");
     if (!container) return;
 
