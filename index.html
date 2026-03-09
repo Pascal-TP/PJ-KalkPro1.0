@@ -21,7 +21,7 @@
 <img src="logo.png" class="logo">
 
 <!-- Countdown -->
-<div id="release-info">Release: V1.0.14</div>
+<div id="release-info">Release: V1.0.15</div>
 <div id="timer">Logout in: 10:00</div>
 
 <!-- NEU: Angemeldet als -->
@@ -86,18 +86,64 @@
 
     <div class="error" id="loginError"></div>
 
+    <div class="ack-row">
+            <label class="ack-label">
+                <input type="checkbox" id="chkPrivacyAck">
+                <span>Ich habe die allgemeinen Hinweise zur Kenntnis genommen.</span>
+            </label>
+        </div>
+
     <button onclick="login()">Anmelden</button>
 
     <button onclick="forgotPassword()">Passwort vergessen</button><br><br>
 <p>(Auf dem Smartphone genießen Sie die optimale Ansicht im Querformat.)</p>
-<br><br><br><br>
+<br><br>
 <p><strong>Datenschutzhinweis:</strong><br>
 Dieses Tool wird ausschließlich intern genutzt.<br>
 Zur Anmeldung werden E-Mail-Adresse und Login-Zeitpunkte verarbeitet.<br>
 Personenbezogene Daten, die für die Anfrage an NDF eingegeben werden, dienen ausschließlich<br>der Erstellung von PDF-Dokumenten und werden nicht dauerhaft gespeichert.<br>
 Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     
+    <div class="legal-links">
+            <a href="#" class="legal-link" onclick="showPage('page-hinweis'); return false;">Allgemeine Hinweise</a>
+        </div>
+
 </div>
+
+<!-- SEITE: ALLGEMEINE HINWEISE -->
+    <div class="page" id="page-hinweis">
+        <h2>Allgemeine Hinweise</h2>
+
+        <div class="box" style="text-align:left;">
+
+            <h3>Preisbasis</h3>
+            - Bei den Flächen-Warmmwasser-Fußbodenheizunsgsystemen fällt unter 80 m² Fläche zusätzlich eine Mindermengenpauschale an.<br>
+                        
+            <h3>Nicht enthaltene Leistungen</h3>
+            Wir weisen darauf hin, dass folgende Leistungen nicht im Leistungspaket enthalten sind:<br>
+
+            - Montage der Verteiler und Schränke<br>
+            - Montage Klemmleiste, Stellantriebe und Raumthermostat<br>
+            - Spülen, Befüllen, Entlüften und Einstellen der Fußbodenheizung<br>
+            - Funktionsheizen, Hydraulischer Abgleich
+
+            <h3>Untergrund</h3>
+            Die angebotenen Montageleistungen gehen von einer den Toleranzen entsprechenden Untergrund aus.<br>
+            Dämmung und Systembahnen werden in einer Stärke montiert, Höhendifferenzen sind über den Estrich auszugleichen.<br>
+            Die Montage von unterschiedlichen Dämmungen und/oder Systembahnen oder sogar in einzelnen Räumen um unsachgemäßen Rohbau kostengünstig auszugleichen, schließen wir hiermit aus.
+
+            <h3>Bauseitige Maßnahme</h3>
+            Die Klemmverschraubungen am Heizkreisverteiler sind nach ca. 4 Wochen nachzuziehen, um weiterhin die Dichtheit des Systems zu gewährleisten.<br>
+            Diese Maßnahme ist bauseits bzw. vom Gewerk Heizung durchzuführen.<br>
+            
+            Stand: April 2025<br><br>
+        </div>
+
+        <div class="button-bar">
+            <button onclick="showPage('page-login')">Zurück zum Login</button>
+        </div>
+    </div>
+
 
 <!-- SEITE 2: PASSWORT ÄNDERN -->
 <div class="page" id="page-change">
@@ -146,33 +192,253 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
 <div class="page" id="page-5">
     <h2>Anfrage an NDF</h2>
 
+    <p>(Rote Felder = Pflichteingaben)</p><br><br>
+
+    <p class="hint">
+        <strong>Kontakt Peter Jensen:</strong><br>
+    </p>
     <div class="input-field">
-        <input id="pj-contact" placeholder="Ansprechpartner bei PJ">
+        <input id="pj-contact" class="required" placeholder="Ansprechpartner bei PJ">
     </div>
     <div class="input-field">
-        <input id="pj-number" placeholder="SHK – PJ-Kunden-Nr.">
+        <input id="pj-email" class="required" placeholder="Ansprechpartner E-Mail bei PJ">
     </div>
     <div class="input-field">
-        <input id="shk-name" placeholder="SHK Name/Firma">
+        <input id="pj-phone" class="required" placeholder="Ansprechpartner Telefon-Nr. bei PJ">
     </div>
     <div class="input-field">
-        <input id="shk-contact" placeholder="SHK Ansprechpartner">
+        <input id="pj-bestellnr" class="required" placeholder="PJ-Bestellnummer">
+    </div>
+
+    <p class="hint">
+        <strong>Kontakt SHK:</strong><br>
+    </p>
+    <div class="input-field">
+        <input id="pj-number" class="required" placeholder="SHK - PJ-Kunden-Nr.">
     </div>
     <div class="input-field">
-        <input id="shk-email" type="email" placeholder="SHK E-Mail">
+        <input id="shk-name" class="required" placeholder="SHK Name/Firma">
     </div>
     <div class="input-field">
-        <input id="shk-phone" placeholder="SHK Telefon-Nr.">
+        <input id="shk-contact" class="required" placeholder="SHK Ansprechpartner">
     </div>
     <div class="input-field">
-        <input id="site-address" placeholder="Adresse Baustelle">
+        <input id="shk-email" class="required" type="email" placeholder="SHK E-Mail">
+    </div>
+    <div class="input-field">
+        <input id="shk-phone" class="required" placeholder="SHK Telefon-Nr.">
+    </div>
+    <div class="input-field">
+        <input id="site-address" class="required" placeholder="Adresse Baustelle">
     </div>
     <p class="hint">
         <strong>Gewünschter Ausführungstermin:</strong><br>
     </p>
     <div class="input-field">
-        <input id="execution-date" type="date" placeholder="Gewünschter Ausführungstermin">
-    </div>
+        <input id="execution-date" class="required" type="date" placeholder="Gewünschter Ausführungstermin">
+    </div><br><br>
+
+    <div class="ack-row">
+            <label class="ack-label">
+                <input type="checkbox" id="chkDetail">
+                <span><strong>Detailangaben zum Bauvorhaben:</strong></span>
+            </label>
+        </div>
+
+    <div id="page5-detail-fields" class="hidden">
+
+    <p class="hint">
+        <strong>Angebotsabgabe bis:</strong><br>
+    </p>
+    <div class="input-field">
+        <input id="offer-date" class="required" type="date" placeholder="Angebotsabgabe bis">
+    </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+    <p class="hint">
+            <strong>Estrich anbieten?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="estrich" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>Bodenbelag anbieten?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="bodenbelag" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Systemmarke:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="systemmarke" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="Handelsmarke">Handelsmarke</option>
+                <option value="Uponor">Uponor</option>
+                <option value="Uponor">Roth</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>System:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="system" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="Tacker">Tacker</option>
+                <option value="Noppe">Noppe</option>
+                <option value="Klett">Klett</option>
+                <option value="Industriebodenheizung">Industriebodenheizung</option>
+                <option value="Trockenbau">Trockenbau</option>
+                <option value="Fräsen">Fräsen</option>
+                <option value="Anderes">Anderes (siehe Freihtext)</option>
+            </select>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Rohrtyp - Auswahl 1:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="rohrtyp1" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="RT_17er">RT 17er</option>
+                <option value="RT_20er">RT 20er</option>
+                <option value="Xa_17er">Xa 17er</option>
+                <option value="Xa_20er">Xa 20er</option>
+                <option value="keine_Auswahl">keine Auswahl</option>
+            </select>
+        </div>
+         <p class="hint">
+            <strong>Rohrtyp - Auswahl 2:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="rohrtyp2" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="Metallverbund_12er">Metallverbund 12er</option>
+                <option value="Metallverbund_14er">Metallverbund 14er</option>
+                <option value="Metallverbund_16er">Metallverbund 16er</option>
+                <option value="keine_Auswahl">keine Auswahl</option>
+            </select>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Dämmung:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="dämmung" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="nur_oberlage">Nur Oberlage</option>
+                <option value="mit_dämmung">Komplett mit Dämmung</option>
+                <option value="ohne_dämmung">Komplett ohne Dämmung</option>
+            </select>
+        </div>
+        <div class="input-field">
+            <input id="wärmeleitgruppe" class="required" placeholder="Wärmeleitgruppe">
+        </div>
+        <div class="input-field">
+            <input id="aufbauhöhe" class="required" placeholder="Aufbauhöhe (mm)">
+        </div>
+        <div class="legal-links">
+            <a href="#" class="legal-link" onclick="showPage('page-aufbau'); return false;">Hinweis Aufbauhöhe</a>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Unbeheizte Flächen?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="unbeheizt" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div>
+        <div class="input-field">
+            <input id="unbeheizte_Fläche" placeholder="Wo / m² unbeheizte Fläche?">
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Heizkreisverteiler?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="heizkreisverteiler" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="nur_lieferung">Nur Lieferung</option>
+                <option value="lieferung_montage">Lieferung und Montage</option>
+                <option value="bauseits">Bauseits</option>
+            </select>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <p class="hint">
+            <strong>Baustellenbesichtigung (Beratungspauschale)?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="besichtigung" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>Einfache Projektierung und Schnellauslegung?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="schnellauslegung" class="required" >
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>Heizflächenberechnung?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="berechnung" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>Heizlastberechnung?</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="heizlastberechnung" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="ja">ja</option>
+                <option value="nein">nein</option>
+            </select>
+        </div><br>
+        <p class="hint">
+            <strong>_________________________________</strong><br>
+        </p><br>
+        <div class="input-field">
+    <textarea id="relevante_Details" placeholder="Relevante Details" rows="6"></textarea>
+</div>
+
+</div>
+
+<br><br>
     <p class="hint"><u>Für eine optimale Angebotserstellung, fügen Sie bitte der E-Mail als Anhang bei:</u><br><br>
         <strong>• Bemaßter Grundriss</strong> (PDF oder DWG)<br>
         <strong>• Gebäudeschnitt / Ansichten</strong> -> Wenn Dämmung angeboten werden soll.<br>
@@ -184,10 +450,31 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="error" id="page5-error" style="color:darkred; margin:10px;"></div>
 
     <div class="button-bar">
-        <button onclick="submitPage5()">Eingabe und Weiter</button>
-        <button onclick="direktZumAngebot()">Eingabe und Direkt zum Angebot</button>
+        <button id="submitPage5Btn" onclick="submitPage5()">Eingabe und weiter zum Hauptmenü</button>
     </div>
 </div>
+
+<!-- SEITE: HINWEIS Aufbauhöhe -->
+    <div class="page" id="page-aufbau">
+        <h2>Hinweis Aufbauhöhe</h2>
+
+        <div class="box" style="text-align:left;">
+
+            <h3>Aufbaubeispiel:</h3>
+            A Bodenbelag (Standard = 15mm)<br>
+            B Standard-Estrichhöhe = 60-65mm (Rohrüberdeckung = 45 mm)<br>
+            C Heizrohr 17 x 2,0 = 17 mm<br>
+            D Systemdämmung 30mm = 30 mm<br>
+            E Zusatzdämmung EPS= 20 mm<br>
+            = Gesamtaufbauhöhe = 130 mm<br><br><br>
+                        
+            <img src="aufbauhöhe.png" alt="Aufbauhöhe">
+        </div>
+
+        <div class="button-bar">
+            <button onclick="showPage('page-5')">Zurück zur Eingabeseite</button>
+        </div>
+    </div>
 
 <!-- SEITE 6: HAUPTMENÜ SANIERUNG -->
 <div class="page" id="page-6">
@@ -239,7 +526,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -264,7 +551,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
 <div class="button-bar">
                 <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
                 <button onclick="showPage('page-18')">Weiter</button>
-                <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+                <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
                </div>
 </div>
 
@@ -334,7 +621,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 
 </div>
@@ -348,7 +635,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-20')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -361,7 +648,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-20')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -374,7 +661,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-21')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -387,7 +674,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-22')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -412,7 +699,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -425,7 +712,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -456,7 +743,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -469,7 +756,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -482,7 +769,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-6')">Zurück zum Hauptmenü Sanierung</button>
         <button onclick="showPage('page-20')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -518,7 +805,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -531,7 +818,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -544,7 +831,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -557,7 +844,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -570,7 +857,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -583,7 +870,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-20')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -596,7 +883,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="button-bar">
         <button onclick="showPage('page-7')">Zurück zum Hauptmenü Neubau</button>
         <button onclick="showPage('page-18')">Weiter</button>
-        <button onclick="direktZumAngebot()">Direkt zum Angebot</button>
+        <button onclick="direktZumAngebot()">Direkt zur Ausgabeseite</button>
     </div>
 </div>
 
@@ -608,6 +895,17 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <script type="module" src="app.js"></script>
+
+<div id="hinweisModal" class="modal">
+  <div class="modal-content">
+    <p id="hinweisText"></p>
+
+    <div id="hinweisButtons">
+      <button type="button" id="hinweisOk">OK</button>
+      <button type="button" id="hinweisCancel">Abbrechen</button>
+    </div>
+  </div>
+</div>
 
 </body>
 

@@ -39,6 +39,9 @@ function resetStoredInputsOnReload() {
 
   if (!isReload) return;
 
+  fraesenVerwendet = false;
+  fraesenHinweisGezeigt = false;
+
   // Nur deine Eingabe-/Angebotsdaten löschen (Auth bleibt erhalten!)
   const keysToRemove = [
     "page5Data",
@@ -83,9 +86,10 @@ function handleUserAction(val) {
   // bestehende Aktionen
   if (val === "changePw") goToChange();
   if (val === "clear") {
-    const ok = confirm("Alle Eingaben wirklich löschen?");
-    if (ok) clearInputs();
-  }
+  showConfirm("Alle Eingaben wirklich löschen?", () => {
+    clearInputs();
+  });
+}
   if (val === "logout") logout();
 
   // zurücksetzen, damit man die gleiche Aktion nochmal wählen kann
@@ -152,6 +156,7 @@ const auth = getAuth(fbApp);
     const last = sessionStorage.getItem("lastPage");
     const target = getInitialPage();
 
+    startTimer();
     showPage(target);
 
   } else {
@@ -178,6 +183,72 @@ if (app) app.classList.remove("hidden");
 
 const db = getFirestore(fbApp);
 
+// -----------------------------
+// allgemeine Hinweise-Checkbox Gate (Login + Registrierung)
+// (ohne Persistenz: nach Reload wieder leer, Haken frei entfernbar)
+// -----------------------------
+
+function isPrivacyAccepted() {
+    const cb1 = document.getElementById("chkPrivacyAck");
+    return !!(cb1?.checked);
+}
+
+function updateAuthButtons() {
+    const ok = isPrivacyAccepted();
+
+    const btnLogin = document.getElementById("btnLogin");
+    
+    // NICHT disabled setzen -> sonst kein Klick -> keine Fehlermeldung
+    btnLogin?.classList.toggle("btn-disabled", !ok);
+    }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const cb1 = document.getElementById("chkPrivacyAck");
+    const cbDetail = document.getElementById("chkDetail");
+    const besichtigung = document.getElementById("besichtigung");
+
+    cb1?.addEventListener("change", updateAuthButtons);
+
+    if (cb1) cb1.checked = false;
+
+    if (cbDetail) {
+      cbDetail.checked = false;
+      cbDetail.addEventListener("change", updatePage5DetailUI);
+      // danach Dienstleistungs-Feld synchronisieren
+        syncBesichtigungToPage21();
+    }
+
+    updateAuthButtons();
+    updatePage5DetailUI();
+
+    handlePage5Hinweis(
+        "besichtigung",
+        "Hinweis: Für die Baustellenbesichtigung wird eine Beratungspauschale erhoben. Bei Auswahl 'ja' wird automatisch auf der Seite 'Dienstleistungen' die Menge 1 eingetragen."
+    );
+    
+    handlePage5Hinweis(
+        "schnellauslegung",
+        "Hinweis: Für die Schnellauslegung werden zusätzliche Projektunterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+    );
+
+    handlePage5Hinweis(
+        "berechnung",
+        "Hinweis: Für die Heizflächenberechnung werden zusätzliche Angaben und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+    );
+
+    handlePage5Hinweis(
+        "heizlastberechnung",
+        "Hinweis: Für die Heizlastberechnung werden vollständige Gebäudedaten und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+    );
+});
+
+if (besichtigung) {
+    besichtigung.addEventListener("change", () => {
+        savePage5Data?.();
+        syncBesichtigungToPage21();
+    });
+}
+
 		// -----------------------------
 		// showPage
 		// -----------------------------
@@ -185,7 +256,7 @@ const db = getFirestore(fbApp);
 async function showPage(id, fromHistory = false) {
 
         // Ohne Login nur diese Seiten erlauben:
-  const publicPages = new Set(["page-login", "page-start", "page-change"]);
+  const publicPages = new Set(["page-login", "page-start", "page-change", "page-hinweis"]);
 
   if (!isLoggedIn() && !publicPages.has(id)) {
     console.warn("Blocked navigation (not logged in):", id);
@@ -238,6 +309,11 @@ document.getElementById(id).classList.add("active");
       showLoader40(false);
     }
   }
+  // Checkboxen beim Seitenwechsel zurücksetzen
+    const cb1 = document.getElementById("chkPrivacyAck");
+        if (cb1) cb1.checked = false;
+    
+    updateAuthButtons();
 }
 
 		// -----------------------------
@@ -248,10 +324,18 @@ async function login() {
   const email = loginUser.value.trim();
   const pw = loginPass.value;
 
+  // 1) Erst Eingaben prüfen
   if (!email || !pw) {
     loginError.innerText = "Bitte E-Mail und Passwort eingeben.";
     return;
   }
+
+// 2) Dann allgemeine Hinweise-Haken prüfen
+    if (!isPrivacyAccepted()) {
+        if (loginError) loginError.innerText =
+            "Bitte bestätigen Sie die allgemeinen Hinweise (Haken setzen), um sich anzumelden.";
+        return;
+    }
 
   try {
     const cred = await signInWithEmailAndPassword(auth, email, pw);
@@ -479,14 +563,158 @@ function refreshRabattDisplays() {
   if (p40) p40.innerText = `Gesamtpreis abzgl. SHK-Rabatt (15%): ${formatEuro(after)}`;
 }
 
+        // -----------------------------
+		// Funktionen zur Seite 5
+		// -----------------------------
+
+function getPage5BasicIds() {
+  return [
+    "pj-contact",
+    "pj-email",
+    "pj-phone",
+    "pj-bestellnr",
+    "pj-number",
+    "shk-name",
+    "shk-contact",
+    "shk-email",
+    "shk-phone",
+    "site-address",
+    "execution-date"
+  ];
+}
+
+function getPage5DetailIds() {
+  return [
+    "offer-date",
+    "estrich",
+    "bodenbelag",
+    "systemmarke",
+    "system",
+    "rohrtyp1",
+    "rohrtyp2",
+    "dämmung",
+    "wärmeleitgruppe",
+    "aufbauhöhe",
+    "unbeheizt",
+    "unbeheizte_Fläche",
+    "heizkreisverteiler",
+    "besichtigung",
+    "schnellauslegung",
+    "berechnung",
+    "heizlastberechnung",
+    "relevante_Details"
+  ];
+}
+
+function clearPage5DetailFields() {
+  getPage5DetailIds().forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+
+    if (el.tagName === "SELECT") {
+      el.selectedIndex = 0;
+    } else if (el.type === "checkbox") {
+      el.checked = false;
+    } else {
+      el.value = "";
+    }
+  });
+}
+
+function updatePage5DetailUI() {
+  const chk = document.getElementById("chkDetail");
+  const box = document.getElementById("page5-detail-fields");
+  const btn = document.getElementById("submitPage5Btn");
+
+  const active = !!chk?.checked;
+
+  if (box) box.classList.toggle("hidden", !active);
+
+  if (btn) {
+    btn.innerText = active
+      ? "Eingabe und weiter zu den Dienstleistungen"
+      : "Eingabe und weiter zum Hauptmenü";
+  }
+
+  if (!active) {
+    clearPage5DetailFields();
+    savePage5Data();
+  }
+  syncBesichtigungToPage21();
+}
+
+function showHinweis(text) {
+
+  const modal = document.getElementById("hinweisModal");
+  const textBox = document.getElementById("hinweisText");
+  const okBtn = document.getElementById("hinweisOk");
+  const cancelBtn = document.getElementById("hinweisCancel");
+
+  textBox.innerText = text;
+
+  cancelBtn.style.display = "none";   // Abbrechen ausblenden
+  okBtn.onclick = closeHinweis;
+
+  modal.style.display = "block";
+}
+
+function closeHinweis() {
+  document.getElementById("hinweisModal").style.display = "none";
+}
+
+function showConfirm(text, onOk) {
+
+  const modal = document.getElementById("hinweisModal");
+  const textBox = document.getElementById("hinweisText");
+  const okBtn = document.getElementById("hinweisOk");
+  const cancelBtn = document.getElementById("hinweisCancel");
+
+  textBox.innerText = text;
+
+  cancelBtn.style.display = "inline-block"; // Abbrechen anzeigen
+
+  okBtn.onclick = () => {
+    modal.style.display = "none";
+    if (typeof onOk === "function") onOk();
+  };
+
+  cancelBtn.onclick = () => {
+    modal.style.display = "none";
+  };
+
+  modal.style.display = "block";
+}
+
+window.showHinweis = showHinweis;
+window.closeHinweis = closeHinweis;
+window.showConfirm = showConfirm;
+
+function handlePage5Hinweis(selectId, hinweisText) {
+    const el = document.getElementById(selectId);
+    if (!el) return;
+
+    el.addEventListener("change", () => {
+        if (el.value === "ja") {
+            showHinweis(hinweisText);
+        }
+    });
+}
+
+
 		// -----------------------------
 		// Funktion zur Prüfung der Pflichteingaben auf Seite 5 (Kopfdaten für Anfrage) + speichern
 		// -----------------------------
 
 function submitPage5() {
+       
+    const detailAktiv = !!document.getElementById("chkDetail")?.checked;
+
     const fields = [
         {id: "pj-contact", name: "Ansprechpartner bei PJ"},
-        {id: "pj-number", name: "SHK – PJ-Kunden-Nr."},
+        {id: "pj-email", name: "Ansprechpartner E-Mail bei PJ"},
+        {id: "pj-phone", name: "Ansprechpartner Telefon-Nr. bei PJ"},
+        {id: "pj-bestellnr", name: "PJ-Bestellnummer"},
+        {id: "pj-number", name: "SHK - PJ-Kunden-Nr."},
         {id: "shk-name", name: "SHK Name/Firma"},
         {id: "shk-contact", name: "SHK Ansprechpartner"},
         {id: "shk-email", name: "SHK E-Mail"},
@@ -495,10 +723,32 @@ function submitPage5() {
         {id: "execution-date", name: "Gewünschter Ausführungstermin"}
     ];
 
+    if (detailAktiv) {
+        fields.push(
+            {id: "offer-date", name: "Angebotsabgabe bis"},
+            {id: "estrich", name: "Estrich anbieten?"},
+            {id: "bodenbelag", name: "Bodenbelag anbieten?"},
+            {id: "systemmarke", name: "Systemmarke"},
+            {id: "system", name: "System"},
+            {id: "rohrtyp1", name: "Rohrtyp Auswahl 1"},
+            {id: "rohrtyp2", name: "Rohrtyp Auswahl 2"},
+            {id: "dämmung", name: "Dämmung"},
+            {id: "wärmeleitgruppe", name: "Wärmeleitgruppe"},
+            {id: "aufbauhöhe", name: "Aufbauhöhe"},
+            {id: "unbeheizt", name: "Unbeheizte Fläche"},
+            {id: "heizkreisverteiler", name: "Heizkreisverteiler"},
+            {id: "besichtigung", name: "Baustellenbesichtigung"},
+            {id: "schnellauslegung", name: "Schnellauslegung"},
+            {id: "berechnung", name: "Heizflächenberechnung"},
+            {id: "heizlastberechnung", name: "Heizlastberechnung"}
+        );
+    }
+
     let missing = [];
 
     fields.forEach(f => {
-        const val = document.getElementById(f.id).value.trim();
+        const el = document.getElementById(f.id);
+        const val = (el?.value || "").trim();
         if (!val) missing.push(f.name);
     });
 
@@ -512,18 +762,24 @@ function submitPage5() {
     errorDiv.innerText = "";
 
     savePage5Data();
-    
-    showPage("page-4");
+
+    showPage(detailAktiv ? "page-21" : "page-4");
 }
 
 function savePage5Data() {
     const ids = [
-        "pj-contact", "pj-number", "shk-name", "shk-contact",
-        "shk-email", "shk-phone", "site-address", "execution-date"
+        "pj-contact", "pj-email", "pj-phone", "pj-bestellnr", "pj-number", "shk-name", "shk-contact",
+        "shk-email", "shk-phone", "site-address", "execution-date",
+        "offer-date", "estrich", "bodenbelag", "systemmarke", "system",
+        "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe", "aufbauhöhe",
+        "unbeheizt", "unbeheizte_Fläche", "heizkreisverteiler", "besichtigung",
+        "schnellauslegung", "berechnung", "heizlastberechnung", "relevante_Details"
     ];
 
     const obj = {};
     ids.forEach(id => obj[id] = (document.getElementById(id)?.value || "").trim());
+
+    obj.chkDetail = !!document.getElementById("chkDetail")?.checked;
 
     localStorage.setItem("page5Data", JSON.stringify(obj));
 }
@@ -935,13 +1191,34 @@ async function loadPage40() {
 
     const labels = {
         "pj-contact": "Ansprechpartner bei PJ",
-        "pj-number": "SHK – PJ-Kunden-Nr.",
+        "pj-email": "Ansprechpartner E-Mail bei PJ",
+        "pj-phone": "Ansprechpartner Telefon-Nr. bei PJ",
+        "pj-bestellnr": "PJ-Bestellnummer",
+        "pj-number": "SHK - PJ-Kunden-Nr.",
         "shk-name": "SHK Name/Firma",
         "shk-contact": "SHK Ansprechpartner",
         "shk-email": "SHK E-Mail",
         "shk-phone": "SHK Telefon-Nr.",
         "site-address": "Adresse Baustelle",
-        "execution-date": "Gewünschter Ausführungstermin"
+        "execution-date": "Gewünschter Ausführungstermin",
+        "offer-date": "Angebotsabgabe bis",
+        "estrich": "Estrich anbieten?",
+        "bodenbelag": "Bodenbelag anbieten?",
+        "systemmarke": "Systemmarke",
+        "system": "System",
+        "rohrtyp1": "Rohrtyp Auswahl 1",
+        "rohrtyp2": "Rohrtyp Auswahl 2",
+        "dämmung": "Dämmung",
+        "wärmeleitgruppe": "Wärmeleitgruppe",
+        "aufbauhöhe": "Aubauhöhe",
+        "unbeheizt": "Unbeheizte Fläche",
+        "unbeheizte_Fläche": "Wo / m² unbeheizte Fläche",
+        "heizkreisverteiler": "Heizkreisverteiler",
+        "besichtigung": "Baustellenbesichtigung",
+        "schnellauslegung": "Schnellauslegung",
+        "berechnung": "Heizflächenberechnung",
+        "heizlastberechnung": "Heizlastberechnung",
+        "relevante_Details": "Relevante Details"
     };
 
     let html = "";
@@ -1109,12 +1386,14 @@ refreshRabattDisplays();
 
 function direktZumAngebot() {
 
-    const fields = [
-        "pj-contact", "pj-number", "shk-name", "shk-contact",
-        "shk-email", "shk-phone", "site-address", "execution-date"
+    const ids = [
+        "pj-contact", "pj-email", "pj-phone", "pj-bestellnr", "pj-number", "shk-name", "shk-contact",
+        "shk-email", "shk-phone", "site-address", "execution-date", "offer-date", "estrich", "bodenbelag",
+        "systemmarke", "system", "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe", "aufbauhöhe", "unbeheizt",
+        "heizkreisverteiler", "besichtigung", "schnellauslegung", "berechnung", "heizlastberechnung"
     ];
 
-    const alleAusgefüllt = fields.every(id => {
+    const alleAusgefüllt = ids.every(id => {
         const val = document.getElementById(id)?.value?.trim();
         return val && val.length > 0;
     });
@@ -1227,8 +1506,20 @@ function clearInputs() {
 // localStorage komplett löschen
     localStorage.clear();
 
+fraesenVerwendet = false;
+fraesenHinweisGezeigt = false;
+
 // Eingabefelder im DOM leeren
     document.querySelectorAll("input").forEach(inp => inp.value = "");
+
+const chkDetail = document.getElementById("chkDetail");
+if (chkDetail) chkDetail.checked = false;
+
+clearPage5DetailFields();
+updatePage5DetailUI();
+
+const page5Error = document.getElementById("page5-error");
+if (page5Error) page5Error.innerText = "";
 
 // Dynamische Inhalte leeren (damit nichts „stehen bleibt“)
     const idsToClear = [
@@ -1240,15 +1531,15 @@ function clearInputs() {
         "content-20",
         "content-21",
         "content-22",
-	"content-9",
+	    "content-9",
         "content-10",
         "content-23",
-	"content-24",
+	    "content-24",
         "content-25",
         "content-27",
         "content-28",
         "content-30",
-	"content-31",
+	    "content-31",
         "content-32",
         "content-33",
         "content-13",
@@ -1259,6 +1550,16 @@ function clearInputs() {
     idsToClear.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.innerHTML = "";
+
+document.querySelectorAll("select").forEach(sel => sel.selectedIndex = 0);
+
+const chkDetail = document.getElementById("chkDetail");
+if (chkDetail) chkDetail.checked = false;
+
+if (typeof updatePage5DetailUI === "function") {
+    updatePage5DetailUI();
+}
+
     });
 
 // Summen-Anzeige zurücksetzen
@@ -1333,7 +1634,6 @@ function clearInputs() {
 // Angebots-Summen Objekt zurücksetzen (falls du es im RAM nutzt)
     angebotSummen = {};
 
-    currentUser = null;
     updateAdminUI_();
 
 document.querySelectorAll('[data-rabatt="angebot"]').forEach(el => {
@@ -1584,6 +1884,7 @@ if (!headerInserted) {
          </div>`;
 
             container.innerHTML = html;
+            updateFraesenStatus();
             berechneGesamt8();
         });
 }
@@ -1611,7 +1912,7 @@ function setupFraesenHinweis() {
 
     fraesenHinweisGezeigt = true;
 
-    alert(
+    showHinweis(
       "Achtung!\n\n" +
       "Bei Frässystemen können je nach Entfernung und Flächengröße zusätzliche Aufschläge anfallen.\n\n" +
       "Bitte erfragen Sie hierzu ein individuelles Angebot."
@@ -1637,6 +1938,7 @@ function calcRow8(input, preis, index) {
     gespeicherteWerte[index] = menge;
     localStorage.setItem("page8Data", JSON.stringify(gespeicherteWerte));
 
+    updateFraesenStatus();
     berechneGesamt8();
 }
 
@@ -1662,6 +1964,21 @@ function berechneGesamt8() {
             "Gesamtsumme Angebot: " +
             getGesamtAngebotssumme().toLocaleString("de-DE",{minimumFractionDigits:2}) + " €";
     }
+}
+
+function updateFraesenStatus() {
+
+  // alle Fräsen-Mengenfelder auf Seite 8 prüfen
+  const inputs = document.querySelectorAll("#page-8 .menge-input");
+
+  let fraesenAktiv = false;
+
+  inputs.forEach(input => {
+    const val = parseFloat(input.value) || 0;
+    if (val > 0) fraesenAktiv = true;
+  });
+
+  fraesenVerwendet = fraesenAktiv;
 }
 
 		// -----------------------------
@@ -1954,6 +2271,23 @@ function berechneGesamt20() {
 		// SEITE 21 – Dienstleistungen (ndf9.csv)
 		// -----------------------------
 
+        function syncBesichtigungToPage21() {
+    const chkDetail = document.getElementById("chkDetail");
+    const besichtigung = document.getElementById("besichtigung");
+
+    const detailAktiv = !!chkDetail?.checked;
+    const istJa = detailAktiv && besichtigung?.value === "ja";
+
+    // Nur wenn Seite 21 schon geladen ist
+    const firstInput = document.querySelector("#page-21 .menge-input");
+    if (!firstInput) return;
+
+    firstInput.value = istJa ? "1" : "0";
+
+    // oninput-Logik bewusst mit auslösen, damit localStorage + Summen mitziehen
+    firstInput.dispatchEvent(new Event("input", { bubbles: true }));
+}
+
 function loadPage21() {
     if (!isLoggedIn()) return;
     
@@ -2047,6 +2381,7 @@ if (!headerInserted) {
 
             container.innerHTML = html;
             berechneGesamt21();
+            syncBesichtigungToPage21();
         });
 }
 
