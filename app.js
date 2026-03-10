@@ -226,15 +226,15 @@ document.addEventListener("DOMContentLoaded", () => {
         "Hinweis: Für die Baustellenbesichtigung wird eine Beratungspauschale erhoben. Bei Auswahl 'ja' wird automatisch auf der Seite 'Dienstleistungen' die Menge 1 eingetragen."
     );
     
-    handlePage5Hinweis(
-        "schnellauslegung",
-        "Hinweis: Für die Schnellauslegung werden zusätzliche Projektunterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
-    );
-
  //   handlePage5Hinweis(
- //       "berechnung",
- //       "Hinweis: Für die Heizflächenberechnung werden zusätzliche Angaben und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+ //       "schnellauslegung",
+ //       "Hinweis: Für die Schnellauslegung werden zusätzliche Projektunterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
  //   );
+
+    handlePage5Hinweis(
+        "berechnung",
+        "Hinweis: Für die Heizflächenberechnung werden zusätzliche Angaben und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+    );
 
     handlePage5Hinweis(
         "heizlastberechnung",
