@@ -21,7 +21,7 @@
 <img src="logo.png" class="logo">
 
 <!-- Countdown -->
-<div id="release-info">Release: V1.0.15</div>
+<div id="release-info">Release: V1.0.16</div>
 <div id="timer">Logout in: 10:00</div>
 
 <!-- NEU: Angemeldet als -->
@@ -62,8 +62,8 @@
     <option value="nav:page-20">➡️ Verteiler & Regeltechnik</option>
     <option value="nav:page-21">➡️ Dienstleistung</option>
     <option value="nav:page-22">➡️ Zuschläge</option>
+    <option value="nav:page-34">➡️ Downloadbereich</option>
 
-    
   </select>
 </div>
 
@@ -122,8 +122,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
             <h3>Nicht enthaltene Leistungen</h3>
             Wir weisen darauf hin, dass folgende Leistungen nicht im Leistungspaket enthalten sind:<br>
 
-            - Montage der Verteiler und Schränke<br>
-            - Montage Klemmleiste, Stellantriebe und Raumthermostat<br>
+            - Verdrahtung Klemmleiste, Stellantriebe und Raumthermostat<br>
             - Spülen, Befüllen, Entlüften und Einstellen der Fußbodenheizung<br>
             - Funktionsheizen, Hydraulischer Abgleich
 
@@ -136,6 +135,11 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
             Die Klemmverschraubungen am Heizkreisverteiler sind nach ca. 4 Wochen nachzuziehen, um weiterhin die Dichtheit des Systems zu gewährleisten.<br>
             Diese Maßnahme ist bauseits bzw. vom Gewerk Heizung durchzuführen.<br>
             <br>
+
+            <h3>Fräsen</h3>
+            Das Merkblatt "Bauseitige Voraussetzungen für das Frässystem" ist zu beachten!<br>
+            <br>
+
             Stand: April 2025<br><br>
         </div>
 
@@ -206,10 +210,7 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     <div class="input-field">
         <input id="pj-phone" class="required" placeholder="Ansprechpartner Telefon-Nr. bei PJ">
     </div>
-    <div class="input-field">
-        <input id="pj-bestellnr" class="required" placeholder="PJ-Bestellnummer">
-    </div>
-
+   
     <p class="hint">
         <strong>Kontakt SHK:</strong><br>
     </p>
@@ -347,8 +348,30 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
                 <option value="ohne_dämmung">Komplett ohne Dämmung</option>
             </select>
         </div>
+        <p class="hint">
+            <strong>Wärmeleitgruppe (WLG) Unterdämmung:</strong><br>
+        </p>
         <div class="input-field">
-            <input id="wärmeleitgruppe" class="required" placeholder="Wärmeleitgruppe">
+            <select id="wärmeleitgruppe1" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="WLG_023">WLG 023</option>
+                <option value="WLG_032">WLG 032</option>
+                <option value="WLG_035">WLG 035</option>
+                <option value="keineAnfor">keine besondere Anforderung</option>
+            </select>
+        </div>
+        <p class="hint">
+            <strong>Wärmeleitgruppe (WLG) Systemdämmung:</strong><br>
+        </p>
+        <div class="input-field">
+            <select id="wärmeleitgruppe2" class="required">
+                <option value="" selected disabled>Auswahl</option>
+                <option value="WLG_032">WLG 032</option>
+                <option value="WLG_035">WLG 035</option>
+                <option value="WLG_040">WLG 040</option>
+                <option value="WLG_045">WLG 045</option>
+                <option value="keineAnfor">keine besondere Anforderung</option>
+            </select>
         </div>
         <div class="input-field">
             <input id="aufbauhöhe" class="required" placeholder="Aufbauhöhe (mm)">
@@ -906,6 +929,26 @@ Eine Weiterverarbeitung oder Auswertung der Daten findet nicht statt.</p>
     </div>
   </div>
 </div>
+
+<!-- SEITE 34: Downloadbereich -->
+<div class="page" id="page-34">
+    <h2>Download - Datenblätter / Checklisten / Infos</h2>
+
+   <a href="Schnittstelle SHK-Fachhandwerk.pdf" target="_blank">
+  Info - Schnittstelle SHK-Fachhandwerk
+</a><br><br>
+
+<a href="Bauseitige Voraussetzungen Fräsen.pdf" target="_blank">
+  Info - Bauseitige Voraussetzungen Fräsen
+</a><br><br>
+
+
+
+    <br><br>
+
+    <button onclick="showPage('page-4')">Zurück zum Hauptmenü</button>
+</div>
+
 
 </body>
 

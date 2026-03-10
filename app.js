@@ -231,10 +231,10 @@ document.addEventListener("DOMContentLoaded", () => {
         "Hinweis: Für die Schnellauslegung werden zusätzliche Projektunterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
     );
 
-    handlePage5Hinweis(
-        "berechnung",
-        "Hinweis: Für die Heizflächenberechnung werden zusätzliche Angaben und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
-    );
+ //   handlePage5Hinweis(
+ //       "berechnung",
+ //       "Hinweis: Für die Heizflächenberechnung werden zusätzliche Angaben und Unterlagen benötigt und es entstehen zusätzliche Kosten. Tragen Sie wenn möglich bei Dienstleistungen das Flächenmaß ein."
+ //   );
 
     handlePage5Hinweis(
         "heizlastberechnung",
@@ -572,7 +572,6 @@ function getPage5BasicIds() {
     "pj-contact",
     "pj-email",
     "pj-phone",
-    "pj-bestellnr",
     "pj-number",
     "shk-name",
     "shk-contact",
@@ -593,7 +592,8 @@ function getPage5DetailIds() {
     "rohrtyp1",
     "rohrtyp2",
     "dämmung",
-    "wärmeleitgruppe",
+    "wärmeleitgruppe1",
+    "wärmeleitgruppe2",
     "aufbauhöhe",
     "unbeheizt",
     "unbeheizte_Fläche",
@@ -713,7 +713,6 @@ function submitPage5() {
         {id: "pj-contact", name: "Ansprechpartner bei PJ"},
         {id: "pj-email", name: "Ansprechpartner E-Mail bei PJ"},
         {id: "pj-phone", name: "Ansprechpartner Telefon-Nr. bei PJ"},
-        {id: "pj-bestellnr", name: "PJ-Bestellnummer"},
         {id: "pj-number", name: "SHK - PJ-Kunden-Nr."},
         {id: "shk-name", name: "SHK Name/Firma"},
         {id: "shk-contact", name: "SHK Ansprechpartner"},
@@ -733,7 +732,8 @@ function submitPage5() {
             {id: "rohrtyp1", name: "Rohrtyp Auswahl 1"},
             {id: "rohrtyp2", name: "Rohrtyp Auswahl 2"},
             {id: "dämmung", name: "Dämmung"},
-            {id: "wärmeleitgruppe", name: "Wärmeleitgruppe"},
+            {id: "wärmeleitgruppe1", name: "Wärmeleitgruppe (WLG) Unterdämmung:"},
+            {id: "wärmeleitgruppe2", name: "Wärmeleitgruppe (WLG) Systemdämmung:"},
             {id: "aufbauhöhe", name: "Aufbauhöhe"},
             {id: "unbeheizt", name: "Unbeheizte Fläche"},
             {id: "heizkreisverteiler", name: "Heizkreisverteiler"},
@@ -768,10 +768,10 @@ function submitPage5() {
 
 function savePage5Data() {
     const ids = [
-        "pj-contact", "pj-email", "pj-phone", "pj-bestellnr", "pj-number", "shk-name", "shk-contact",
+        "pj-contact", "pj-email", "pj-phone", "pj-number", "shk-name", "shk-contact",
         "shk-email", "shk-phone", "site-address", "execution-date",
         "offer-date", "estrich", "bodenbelag", "systemmarke", "system",
-        "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe", "aufbauhöhe",
+        "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe1", "wärmeleitgruppe2","aufbauhöhe",
         "unbeheizt", "unbeheizte_Fläche", "heizkreisverteiler", "besichtigung",
         "schnellauslegung", "berechnung", "heizlastberechnung", "relevante_Details"
     ];
@@ -1193,7 +1193,6 @@ async function loadPage40() {
         "pj-contact": "Ansprechpartner bei PJ",
         "pj-email": "Ansprechpartner E-Mail bei PJ",
         "pj-phone": "Ansprechpartner Telefon-Nr. bei PJ",
-        "pj-bestellnr": "PJ-Bestellnummer",
         "pj-number": "SHK - PJ-Kunden-Nr.",
         "shk-name": "SHK Name/Firma",
         "shk-contact": "SHK Ansprechpartner",
@@ -1209,7 +1208,8 @@ async function loadPage40() {
         "rohrtyp1": "Rohrtyp Auswahl 1",
         "rohrtyp2": "Rohrtyp Auswahl 2",
         "dämmung": "Dämmung",
-        "wärmeleitgruppe": "Wärmeleitgruppe",
+        "wärmeleitgruppe1": "Wärmeleitgruppe (WLG) Unterdämmung",
+        "wärmeleitgruppe2": "Wärmeleitgruppe (WLG) Systemdämmung",
         "aufbauhöhe": "Aubauhöhe",
         "unbeheizt": "Unbeheizte Fläche",
         "unbeheizte_Fläche": "Wo / m² unbeheizte Fläche",
@@ -1387,9 +1387,9 @@ refreshRabattDisplays();
 function direktZumAngebot() {
 
     const ids = [
-        "pj-contact", "pj-email", "pj-phone", "pj-bestellnr", "pj-number", "shk-name", "shk-contact",
+        "pj-contact", "pj-email", "pj-phone", "pj-number", "shk-name", "shk-contact",
         "shk-email", "shk-phone", "site-address", "execution-date", "offer-date", "estrich", "bodenbelag",
-        "systemmarke", "system", "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe", "aufbauhöhe", "unbeheizt",
+        "systemmarke", "system", "rohrtyp1", "rohrtyp2", "dämmung", "wärmeleitgruppe1", "wärmeleitgruppe2","aufbauhöhe", "unbeheizt",
         "heizkreisverteiler", "besichtigung", "schnellauslegung", "berechnung", "heizlastberechnung"
     ];
 
