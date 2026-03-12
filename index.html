@@ -86,7 +86,7 @@
             <input id="loginUser" type="email" placeholder="E-Mail">
             <input id="loginPass" type="password" placeholder="Passwort">
 
-            <button id="btnLogin" onclick="login()">Anmelden</button>
+            <div class="error" id="loginError"></div>
 
             <div class="ack-row">
                 <label class="ack-label">
@@ -95,7 +95,7 @@
                 </label>
             </div>
 
-            <button onclick="login()">Anmelden</button>
+            <button id="btnLogin" onclick="login()">Anmelden</button>
 
             <button onclick="forgotPassword()">Passwort vergessen</button><br><br>
             <p>(Auf dem Smartphone genießen Sie die optimale Ansicht im Querformat.)</p>
